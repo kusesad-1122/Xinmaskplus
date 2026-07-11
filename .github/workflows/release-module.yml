@@ -10,6 +10,10 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+*'
       - '!v*-so'
+    branches:
+      # 首发流水线:token 无法推 tag、workflow_dispatch 又要求文件在默认分支时,
+      # 走一次分支推送触发,softprops/action-gh-release@v2 会自己在当前 SHA 上建 tag
+      - 'claude/v2.7-*'
 
 permissions:
   contents: write
@@ -24,14 +28,22 @@ jobs:
       - name: Resolve tag
         id: tag
         run: |
-          if [ -n "${{ inputs.tag }}" ]; then
-            TAG="${{ inputs.tag }}"
-          else
-            TAG="${GITHUB_REF#refs/tags/}"
-          fi
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           MODVER=$(grep '^version=' module.prop | cut -d= -f2)
           echo "modver=$MODVER" >> "$GITHUB_OUTPUT"
+          if [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          elif [[ "$GITHUB_REF" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          else
+            # 分支触发:按 module.prop 里的 version 派生 tag(v2.7 → v2.7.0)
+            case "$MODVER" in
+              v*.*.*) TAG="$MODVER" ;;
+              v*.*)   TAG="${MODVER}.0" ;;
+              *)      TAG="${MODVER}" ;;
+            esac
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "resolved tag=$TAG modver=$MODVER"
 
       - name: Fetch zygisk .so from prior release
         run: |
