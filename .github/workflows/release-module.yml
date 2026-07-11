@@ -114,44 +114,36 @@ jobs:
       - name: Compose release notes
         run: |
           SHA=$(cut -d' ' -f1 release.sha256)
-          cat > RELEASE_NOTES.md <<EOF
+          NOTES_SRC=".github/RELEASE_NOTES.md"
+          if [ -f "$NOTES_SRC" ]; then
+            # 复制仓库自带的每版说明,末尾追加校验区块
+            cp "$NOTES_SRC" RELEASE_NOTES.md
+            {
+              echo
+              echo "### 校验"
+              echo
+              echo '```'
+              echo "Xmark-Tools.zip"
+              echo "SHA256: $SHA"
+              echo '```'
+              echo
+              echo "构建时间:$(date -u +'%Y-%m-%d %H:%M UTC')"
+            } >> RELEASE_NOTES.md
+          else
+            # 兜底模板(仓库里没维护 .github/RELEASE_NOTES.md 时使用)
+            cat > RELEASE_NOTES.md <<EOF
           ## Xmark-Tools ${{ steps.tag.outputs.modver }}
 
-          发布时间：$(date -u +'%Y-%m-%d %H:%M UTC')
-
-          ### 主要修复
-
-          - **WebUI 开关点亮后自动关闭**
-            \`monitor_app.sh\` 每 2 秒重写 \`feature_status.txt\` 时丢失了 \`force_hide\` / \`coloros_lock\` 两个 key,\`syncSwitchesFromConfig()\` 读到 undefined 会把 checkbox 复位。已补上两个 key。
-          - **一键修复 RKP 开关无法保持"已修复"状态**
-            \`fix_rkp.sh\` 写入的旗标是 \`pid/rkp_done\`,而 \`monitor_app.sh\` 一直去读 \`pid/rkp\`,名字错位导致 UI 永远显示 0。已把读取路径改为 \`pid/rkp_done\`。
-          - **重启后大部分开关变关**
-            \`service.sh\` 里 \`PERSIST_FLAGS\` 原本只覆盖 6 个开关。已扩展到含 \`coloros_lock\`、\`coloros_signal\`、\`force_hide\`、\`notify_always\`、\`auto_clean\`、\`soter\`,让开关状态跨重启保留。
-
-          ### 继承自 v2.6 的修复
-
-          - \`customize.sh\` 不再在末尾 \`exit 0\` 提前终止安装器
-          - \`customize.sh\` 不再用 \`MODPATH="\${0%/*}"\` 覆盖安装器传入的 MODPATH
-          - config/flag 全部写入 \$MODPATH/config/(staging 目录),不再污染最终安装路径
-          - 删除安装脚本尾部的 \`am start mqqapi://\` QQ 群拉起
+          构建时间：$(date -u +'%Y-%m-%d %H:%M UTC')
 
           ### 校验
 
           \`\`\`
           Xmark-Tools.zip
-          SHA256: \${SHA}
+          SHA256: $SHA
           \`\`\`
-
-          仅 \`customize.sh\`、\`service.sh\`、\`scripts/monitor_app.sh\`、\`module.prop\` 相较 v2.6.0 有内容变化,其余文件字节级一致。
-
-          ### 建议后续测试
-
-          - [ ] WebUI 打开"强制开启隐藏"、"解除 ColorOS 云控锁帧"两个开关,过 3 秒不应变灰
-          - [ ] "一键修复 RKP" 修复完开关文案为"已修复 · RKP",刷新后仍保持
-          - [ ] 重启一次,SOTER / 常驻通知 / 自动清理等开关应保持用户上次的设置
           EOF
-          # 展开 SHA
-          sed -i "s|\${SHA}|$SHA|g" RELEASE_NOTES.md
+          fi
           cat RELEASE_NOTES.md
 
       - name: Create GitHub release
