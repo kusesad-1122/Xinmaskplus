@@ -1,0 +1,169 @@
+name: Release module ZIP
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (e.g. v2.7.0)'
+        required: true
+        default: 'v2.7.0'
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+*'
+      - '!v*-so'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve tag
+        id: tag
+        run: |
+          if [ -n "${{ inputs.tag }}" ]; then
+            TAG="${{ inputs.tag }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          MODVER=$(grep '^version=' module.prop | cut -d= -f2)
+          echo "modver=$MODVER" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch zygisk .so from prior release
+        run: |
+          set -e
+          mkdir -p zygisk
+          # 从上一版发行包中提取 zygisk/arm64-v8a.so;compile.yml 在私仓构建,这里复用
+          for SRC in \
+            "https://github.com/${{ github.repository }}/releases/download/v2.6.0/Xmark-Tools.zip" \
+            "https://github.com/${{ github.repository }}/releases/download/v2.5/Xmark-Tools.zip"; do
+            if curl -fsSL -o /tmp/prior.zip "$SRC"; then
+              echo "downloaded $SRC"
+              unzip -p /tmp/prior.zip zygisk/arm64-v8a.so > zygisk/arm64-v8a.so
+              break
+            fi
+          done
+          test -s zygisk/arm64-v8a.so
+          ls -la zygisk/
+
+      - name: Assemble module ZIP
+        run: |
+          set -e
+          STAGE=/tmp/stage
+          rm -rf "$STAGE"
+          mkdir -p "$STAGE"
+          # 排除仓库自身元数据 / CI / 本地构建产物,其余按原样打包(customize.sh、metainstall.sh、service.sh 等都是 base64 封装,不需要额外处理)
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'dist' \
+            --exclude '.gitignore' \
+            --exclude '.gitattributes' \
+            ./ "$STAGE/"
+          cp zygisk/arm64-v8a.so "$STAGE/zygisk/arm64-v8a.so"
+          cd "$STAGE"
+          # 与 v2.6.0 的 zip 一致:仓库根目录直接作为压缩包根
+          zip -q -r "$GITHUB_WORKSPACE/Xmark-Tools.zip" .
+          cd -
+          ls -lh Xmark-Tools.zip
+          sha256sum Xmark-Tools.zip | tee release.sha256
+
+      - name: Sanity-check ZIP has fixed customize.sh
+        run: |
+          set -e
+          # customize.sh 的 base64 载荷必须**不再**包含 "am start" 里的 mqqapi 拉群 / 末尾裸 exit 0(修复标志)
+          unzip -p Xmark-Tools.zip customize.sh > /tmp/cs.sh
+          python3 - <<'PY'
+          import re, base64, sys
+          s=open('/tmp/cs.sh').read()
+          m=re.search(r"B64END\s*\n?(.*?)B64END", s, re.S)
+          d=base64.b64decode(re.sub(r'\s+','', m.group(1))).decode()
+          assert not d.rstrip().endswith('exit 0'), 'customize.sh still ends with exit 0'
+          assert 'mqqapi' not in d, 'customize.sh still contains am start mqqapi'
+          assert 'MODPATH="${0%/*}"' not in d, 'customize.sh still overrides MODPATH'
+          print('customize.sh v2.6 fix verified')
+          PY
+          # monitor_app.sh 必须发出 force_hide / coloros_lock,并从 rkp_done 读 rkp
+          unzip -p Xmark-Tools.zip scripts/monitor_app.sh > /tmp/ma.sh
+          python3 - <<'PY'
+          import re, base64
+          s=open('/tmp/ma.sh').read()
+          m=re.search(r"B64END\s*\n?(.*?)B64END", s, re.S)
+          d=base64.b64decode(re.sub(r'\s+','', m.group(1))).decode()
+          assert 'force_hide=${fh}' in d
+          assert 'coloros_lock=${cl}' in d
+          assert 'rkp_done' in d
+          print('monitor_app.sh v2.7 fixes verified')
+          PY
+          # service.sh PERSIST_FLAGS 必须扩宽
+          unzip -p Xmark-Tools.zip service.sh > /tmp/sv.sh
+          python3 - <<'PY'
+          import re, base64
+          s=open('/tmp/sv.sh').read()
+          m=re.search(r"B64END\s*\n?(.*?)B64END", s, re.S)
+          d=base64.b64decode(re.sub(r'\s+','', m.group(1))).decode()
+          for k in ['coloros_lock','coloros_signal','force_hide','notify_always','auto_clean','soter']:
+              assert k in d, f'PERSIST_FLAGS missing {k}'
+          print('service.sh PERSIST_FLAGS verified')
+          PY
+
+      - name: Compose release notes
+        run: |
+          SHA=$(cut -d' ' -f1 release.sha256)
+          cat > RELEASE_NOTES.md <<EOF
+          ## Xmark-Tools ${{ steps.tag.outputs.modver }}
+
+          发布时间：$(date -u +'%Y-%m-%d %H:%M UTC')
+
+          ### 主要修复
+
+          - **WebUI 开关点亮后自动关闭**
+            \`monitor_app.sh\` 每 2 秒重写 \`feature_status.txt\` 时丢失了 \`force_hide\` / \`coloros_lock\` 两个 key,\`syncSwitchesFromConfig()\` 读到 undefined 会把 checkbox 复位。已补上两个 key。
+          - **一键修复 RKP 开关无法保持"已修复"状态**
+            \`fix_rkp.sh\` 写入的旗标是 \`pid/rkp_done\`,而 \`monitor_app.sh\` 一直去读 \`pid/rkp\`,名字错位导致 UI 永远显示 0。已把读取路径改为 \`pid/rkp_done\`。
+          - **重启后大部分开关变关**
+            \`service.sh\` 里 \`PERSIST_FLAGS\` 原本只覆盖 6 个开关。已扩展到含 \`coloros_lock\`、\`coloros_signal\`、\`force_hide\`、\`notify_always\`、\`auto_clean\`、\`soter\`,让开关状态跨重启保留。
+
+          ### 继承自 v2.6 的修复
+
+          - \`customize.sh\` 不再在末尾 \`exit 0\` 提前终止安装器
+          - \`customize.sh\` 不再用 \`MODPATH="\${0%/*}"\` 覆盖安装器传入的 MODPATH
+          - config/flag 全部写入 \$MODPATH/config/(staging 目录),不再污染最终安装路径
+          - 删除安装脚本尾部的 \`am start mqqapi://\` QQ 群拉起
+
+          ### 校验
+
+          \`\`\`
+          Xmark-Tools.zip
+          SHA256: \${SHA}
+          \`\`\`
+
+          仅 \`customize.sh\`、\`service.sh\`、\`scripts/monitor_app.sh\`、\`module.prop\` 相较 v2.6.0 有内容变化,其余文件字节级一致。
+
+          ### 建议后续测试
+
+          - [ ] WebUI 打开"强制开启隐藏"、"解除 ColorOS 云控锁帧"两个开关,过 3 秒不应变灰
+          - [ ] "一键修复 RKP" 修复完开关文案为"已修复 · RKP",刷新后仍保持
+          - [ ] 重启一次,SOTER / 常驻通知 / 自动清理等开关应保持用户上次的设置
+          EOF
+          # 展开 SHA
+          sed -i "s|\${SHA}|$SHA|g" RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: Xmark-Tools ${{ steps.tag.outputs.modver }}
+          body_path: RELEASE_NOTES.md
+          files: |
+            Xmark-Tools.zip
+            release.sha256
+          fail_on_unmatched_files: true
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
