@@ -1,21 +1,29 @@
 【Xmark-Tools 公告】
 更新时间：2026-07-11
 
-当前最新版本：v2.7.1
+当前最新版本：v2.7.2
 
-本次更新：
-- 修复 WebUI 部分开关点亮后自动变灰
-  · 强制开启隐藏 / 解除ColorOS云控锁帧 / 一键修复RKP
-- 让 SOTER / 常驻通知 / 自动清理等开关状态跨重启保留
-- 新增「云端公告」：以后改公告不用发版，打开界面即时看到最新版本信息
-- 静态 notice.txt 同步刷新到 v2.7 文案
+本次紧急修复（基于 v2.5 完整版恢复）：
+- 恢复「伪装白名单CPU型号」完整功能（cpu_spoof.sh / model_spoof.sh）
+  · 前台/后台游戏时全局替换 /proc/cpuinfo，全部退出自动还原
+  · 支持自定义要监控哪些游戏
+- 补齐字体：webroot/fonts/zhiyuan.ttf 找回，界面文字终于用回致远体
+- 恢复 v2.5 的完整 WebUI（自定义冻结 / 云更新入口 / 诊断按钮 / 捐赠码 等）
+- 恢复缺失脚本：exec_daemon.sh（后台守护）、ptyrun.sh、detect.sh、
+  diag.sh、env_audit.sh、hide.sh、extract_icons_v2.sh、cpu_spoof.sh、
+  model_spoof.sh
+- 恢复缺失二进制：bin/ksu_reload.sh、bin/rcq_xt.sh，修正 bin/yuki 大小写
+- 恢复捐赠图 / xny.jpg / gg.sh(云端公告拉取) / xz.sh(云更新触发)
 
-继承自 v2.6 / v2.7 的修复：
-- 修复安装到最后一步 Error code: 1
-  （customize.sh 提前 exit / MODPATH 污染 / 写错 staging 目录）
+保留 v2.7 / v2.7.1 的修复：
+- monitor_app.sh 补齐 force_hide / coloros_lock，rkp 改读 rkp_done
+- service.sh 的 PERSIST_FLAGS 扩宽，让 SOTER/常驻通知/自动清理等
+  开关跨重启保留
+- customize.sh 修好安装到最后 Error code: 1 的问题
+- 发布流水线（tag/dispatch → workflow 自动打包上传）
 
 ⚠️ 提醒：
-- 全新安装或从 v2.5 / v2.6 升级请重启一次
-- 「关于」页面「查看公告」可随时重看这条
+- 首次进入 WebUI 会自动拉公告（gg.sh 走 ghfast/gh-proxy/直连三层）
+- 「云更新到最新版」入口在首页卡片，下次直接更新不用手动下载
 
 如有问题请联系作者。
