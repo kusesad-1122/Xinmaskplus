@@ -26,7 +26,7 @@ function updateUI(statusLine) {
 
 function fetchStatus() {
     // 直接读模块目录下的状态文件，WebUI 有权限访问
-    ksud.exec("cat /data/adb/modules/xinmaskplus/status", function(code, stdout, stderr) {
+    ksud.exec("cat /data/adb/modules/xinmaskplus/webroot/status.txt", function(code, stdout, stderr) {
         if (code === 0 && stdout.trim()) {
             updateUI(stdout.trim());
         }
