@@ -406,6 +406,15 @@
             60% {transform:scale(1);opacity:.35;}
             100%{transform:scale(1.3);opacity:0;}
         }
+    /* ==== 云更新卡片 ==== */
+    @keyframes ghBreath{0%,100%{opacity:.85}50%{opacity:1}}
+    .gh-update-card{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;cursor:pointer;background:rgba(20,20,20,.22);color:#ececec;animation:ghBreath 2.4s ease-in-out infinite;transition:transform .2s ease;margin-bottom:16px;}
+    .gh-update-card:active{transform:scale(.97);}
+    .gh-update-card svg{width:26px;height:26px;fill:#ececec;flex:none;}
+    .gh-update-card .gh-txt{flex:1;}
+    .gh-update-card .gh-txt b{display:block;font-size:15px;font-weight:700;}
+    .gh-update-card .gh-txt span{font-size:11px;opacity:.7;}
+    .gh-update-card .gh-arrow{font-size:18px;opacity:.7;}
     </style>
 
 </head>
@@ -417,7 +426,7 @@
 
     <div id="page-home" class="page active">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div class="st-hero">
@@ -442,6 +451,11 @@
                 </div>
             </div>
         </div>
+        <div class="gh-update-card" id="cloudUpdateCard">
+            <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-2.05-4.95L14 9h6V3l-2.35 2.35A8.97 8.97 0 0 0 12 3z"/></svg>
+            <span class="gh-txt"><b>云更新到最新版</b><span id="cloudUpdateSub">检测并替换为最新版本</span></span>
+            <span class="gh-arrow">›</span>
+        </div>
         <div class="card info-card" id="infoCard" onclick="toggleSysPanel()">
             <div class="sys-row"><span class="sys-label">电池温度</span><span class="sys-value" id="battTemp">--</span></div>
             <div class="sys-row"><span class="sys-label">电池电量</span><span class="sys-value" id="battCap">--</span></div>
@@ -450,13 +464,13 @@
             <div class="sys-row"><span class="sys-label">安全补丁</span><span class="sys-value" id="secPatch">--</span></div>
             <div class="sys-row"><span class="sys-label">设备指纹</span><span class="sys-value" id="fingerprint">--</span></div>
             <div class="sys-row"><span class="sys-label">SELinux</span><span class="sys-value" id="selinux">--</span></div>
-            <div class="sys-row" style="border-bottom:none;"><span class="sys-label">模块版本</span><span class="sys-value" id="moduleVer">v3.4</span></div>
+            <div class="sys-row" style="border-bottom:none;"><span class="sys-label">模块版本</span><span class="sys-value" id="moduleVer">v2.6</span></div>
         </div>
     </div>
 
     <div id="page-clean" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div class="card clean-section">
@@ -467,7 +481,7 @@
 
     <div id="page-func" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div class="card">
@@ -564,7 +578,7 @@
 
     <div id="page-env" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div class="card">
@@ -580,7 +594,7 @@
 
     <div id="page-process" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div class="card">
@@ -610,7 +624,7 @@
 
     <div id="page-settings" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div style="padding-top: 30px;">
@@ -690,7 +704,7 @@
 
     <div id="page-about" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div class="card" style="margin-bottom: 16px; position: relative;">
@@ -725,7 +739,7 @@
 
     <div id="page-customicons" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div style="margin-bottom:12px;">
@@ -740,7 +754,7 @@
 
     <div id="page-log" class="page">
         <div class="global-header">
-            <div class="main-title">苦涩or苳季</div>
+            <div class="main-title">苦涩</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
         <div style="margin-bottom:12px;">
@@ -1852,6 +1866,29 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
     }
     window.updateLensParam = updateLensParam;
     window.resetLensParams = resetLensParams;
+
+    /* ==== 云更新 ==== */
+    let __upPoll = null;
+    function bindCloudUpdate(){
+      const card = document.getElementById('cloudUpdateCard');
+      const sub  = document.getElementById('cloudUpdateSub');
+      if(!card || !sub) return;
+      const set = t => sub.textContent = t;
+      card.addEventListener('click', async ()=>{
+        set('正在连接...');
+        const r = await T('sh /data/adb/modules/xinmaskplus/webroot/xz.sh');
+        if((r.stdout||'').trim()==='RUNNING') set('已有更新任务进行中...');
+        if(__upPoll) clearInterval(__upPoll);
+        __upPoll = setInterval(async ()=>{
+          const s = (await T('cat /data/local/tmp/xmark_up.status 2>/dev/null')).stdout.trim();
+          if(s.indexOf('DOWNLOADING')===0) set('正在下载最新版...');
+          else if(s.indexOf('INSTALLING')===0) set('正在替换文件...');
+          else if(s.indexOf('DONE')===0){ clearInterval(__upPoll); set('更新完成 '+(s.split(':')[1]||'')+'，退出重进生效'); }
+          else if(s.indexOf('FAILED')===0){ clearInterval(__upPoll); set('更新失败：'+(s.split(':')[1]||'未知')); }
+        }, 1500);
+      });
+    }
+    bindCloudUpdate();
 
 </script>
 </body>
