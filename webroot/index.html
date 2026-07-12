@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" data-theme="light">
+<html lang="zh" data-theme="light" style="zoom:0.9;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
@@ -18,6 +18,12 @@
     
     <style>
         
+        @font-face{
+            font-family:'ZhiYuan';
+            src:url('/fonts/zhiyuan.ttf') format('truetype'),url('fonts/zhiyuan.ttf') format('truetype');
+            font-weight:normal;
+            font-display:block;
+        }
         :root {
             /* sizes identical to original */
             --r-sm:10px; --r-md:16px;
@@ -33,18 +39,20 @@
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
         html,body{
             background:transparent!important;min-height:100vh;
-            font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+            font-family:'ZhiYuan','OPPO Sans','MiSans','HarmonyOS Sans','PingFang SC',-apple-system,BlinkMacSystemFont,Roboto,sans-serif;
             color:var(--tx);-webkit-tap-highlight-color:transparent;overflow-x:hidden;
         }
         #bg-layer{
             position:fixed;top:0;left:0;width:100vw;height:100vh;
             background:#f2f2f7;background-size:cover;background-position:center;
             z-index:-2;transition:filter .3s;
+            zoom:1.1112; /* 补偿html的zoom:0.9，让背景铺满屏幕 */
         }
         /* WebGL lens canvas replaces the static bg as the live background */
         #lens-canvas{
             position:fixed;top:0;left:0;width:100vw;height:100vh;
             z-index:-1;pointer-events:none;display:block;
+            zoom:1.1112;
         }
         .container{
             max-width:420px;margin:0 auto;
@@ -241,6 +249,7 @@
                 0 8px 32px rgba(0,0,0,.14),
                 0 2px 8px rgba(0,0,0,.08);
             padding:8px 12px;display:flex;z-index:100;gap:8px;
+            zoom:1.1112; /* 补偿html的zoom:0.9 */
         }
         .dock-tab{
             flex:1;text-align:center;padding:5px 0;border-radius:999px;
@@ -356,6 +365,34 @@
             transition:transform .22s var(--spring),background .2s;
         }
         .dev-qq-btn:active{transform:scale(.93);background:rgba(255,255,255,.35);}
+        /* 带图标的链接按钮 + 呼吸灯 */
+        .dev-footer{display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap;}
+        .link-btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:20px;padding:6px 13px;font-size:11px;font-weight:600;color:var(--tx);cursor:pointer;backdrop-filter:blur(4px);transition:transform .22s var(--spring),background .2s;}
+        .link-btn:active{transform:scale(.93);}
+        .link-btn svg{width:14px;height:14px;flex:none;}
+        .link-btn.qq{background:rgba(18,183,245,.18);}
+        .link-btn.qq svg{fill:#12b7f5;}
+        .link-btn.gh{background:rgba(20,20,20,.22);color:#e6e6e6;animation:ghBreath 2.4s ease-in-out infinite;}
+        .link-btn.gh svg{fill:#e6e6e6;}
+        @keyframes ghBreath{0%,100%{box-shadow:0 0 0 0 rgba(0,0,0,0);background:rgba(20,20,20,.18);}50%{box-shadow:0 0 10px 1px rgba(0,0,0,.55);background:rgba(20,20,20,.42);}}
+        /* 捐赠按钮 link-btn变体 呼吸灯 + 弹窗 */
+        .link-btn.donate-wx{background:rgba(9,187,7,.16);animation:wxBreath 2.6s ease-in-out infinite;}
+        .link-btn.donate-wx svg{fill:#09bb07;}
+        .link-btn.donate-zfb{background:rgba(22,119,255,.16);animation:zfbBreath 2.6s ease-in-out infinite;}
+        .link-btn.donate-zfb svg{fill:#1677ff;}
+        @keyframes wxBreath{0%,100%{box-shadow:0 0 0 0 rgba(9,187,7,0);}50%{box-shadow:0 0 9px 1px rgba(9,187,7,.5);}}
+        @keyframes zfbBreath{0%,100%{box-shadow:0 0 0 0 rgba(22,119,255,0);}50%{box-shadow:0 0 9px 1px rgba(22,119,255,.5);}}
+        .donate-modal{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+        .donate-modal.show{display:flex;}
+        .donate-modal img{max-width:80vw;max-height:80vh;border-radius:16px;box-shadow:0 10px 50px rgba(0,0,0,.55);}
+        /* 模块更新跳转卡 */
+        .gh-update-card{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;cursor:pointer;background:rgba(20,20,20,.22);color:#ececec;animation:ghBreath 2.4s ease-in-out infinite;transition:transform .2s var(--spring);margin-bottom:16px;}
+        .gh-update-card:active{transform:scale(.97);}
+        .gh-update-card svg{width:26px;height:26px;fill:#ececec;flex:none;}
+        .gh-update-card .gh-txt{flex:1;}
+        .gh-update-card .gh-txt b{display:block;font-size:15px;font-weight:700;}
+        .gh-update-card .gh-txt span{font-size:11px;opacity:.7;}
+        .gh-update-card .gh-arrow{font-size:18px;opacity:.7;}
         .about-card-content{display:flex;flex-direction:column;align-items:center;gap:8px;}
         .avatar-img{width:100px;height:100px;border-radius:50%;object-fit:cover;border:2px solid var(--rdyn);background:rgba(255,255,255,.2);max-width:100%;}
         .avatar-wrapper{
@@ -406,59 +443,344 @@
             60% {transform:scale(1);opacity:.35;}
             100%{transform:scale(1.3);opacity:0;}
         }
+    
+        /* ===== Web Terminal 样式 (匹配模块毛玻璃风格) ===== */
+        .term-fm-card,.term-card{padding:14px;}
+        .fm-pathbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+        .fm-icon-btn{
+            flex:none;width:34px;height:34px;border:none;border-radius:10px;
+            background:rgba(255,255,255,.18);color:var(--tx);font-size:16px;font-weight:700;
+            cursor:pointer;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+            transition:transform .2s var(--spring),background .15s;
+        }
+        .fm-icon-btn:active{transform:scale(.9);background:rgba(255,255,255,.3);}
+        .fm-path{
+            flex:1;min-width:0;background:rgba(0,0,0,.18);border-radius:10px;
+            padding:8px 12px;font-family:monospace;font-size:12px;color:var(--tx);
+            white-space:nowrap;overflow-x:auto;direction:rtl;text-align:left;
+        }
+        .fm-quicknav{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px;}
+        .fm-chip{
+            flex:none;border:none;border-radius:999px;padding:5px 12px;font-size:11px;font-weight:600;
+            background:rgba(255,255,255,.15);color:var(--tx2);cursor:pointer;
+            backdrop-filter:blur(4px);transition:background .15s,transform .2s var(--spring);
+        }
+        .fm-chip:active{transform:scale(.92);background:rgba(255,255,255,.3);}
+        .fm-list{max-height:300px;overflow-y:auto;border-radius:12px;background:rgba(0,0,0,.12);padding:4px;}
+        .fm-empty{padding:20px;text-align:center;color:var(--tx3);font-size:13px;}
+        .fm-row{
+            display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;
+            cursor:pointer;transition:background .12s;
+        }
+        .fm-row:active{background:rgba(255,255,255,.14);}
+        .fm-row .fm-ico{flex:none;font-size:18px;width:22px;text-align:center;}
+        .fm-row .fm-meta{flex:1;min-width:0;}
+        .fm-row .fm-name{font-size:13px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .fm-row .fm-detail{font-size:10px;color:var(--tx3);font-family:monospace;margin-top:1px;}
+        .fm-row .fm-perm-tag{
+            flex:none;font-size:9px;font-family:monospace;color:var(--tx2);
+            background:rgba(255,255,255,.14);border-radius:6px;padding:2px 6px;
+        }
+        .fm-row .fm-prop-open{
+            flex:none;font-size:14px;color:var(--tx3);padding:4px 6px;border-radius:8px;
+        }
+        .fm-row .fm-prop-open:active{background:rgba(255,255,255,.2);}
+        .fm-ico.dir{color:#ffd166;} .fm-ico.exe{color:var(--ok);} .fm-ico.lnk{color:var(--ac);}
 
-        /* ===== 云端公告弹窗 ===== */
-        .notice-modal{
-            position:fixed;inset:0;z-index:9999;
-            background:rgba(0,0,0,.42);
-            backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-            display:none;align-items:center;justify-content:center;
-            padding:24px;box-sizing:border-box;
+        /* 终端 */
+        .term-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+        .term-toolbar-title{font-size:12px;font-weight:600;color:var(--tx2);display:flex;align-items:center;gap:6px;}
+        .term-toolbar-btns{display:flex;gap:6px;}
+        .term-card .btn-sm{
+            background:rgba(255,255,255,.18);border:none;border-radius:20px;padding:4px 10px;
+            font-size:11px;font-weight:600;color:var(--tx);cursor:pointer;backdrop-filter:blur(4px);
         }
-        .notice-modal.show{display:flex;animation:noticeFade .2s ease-out;}
-        .notice-card{
-            max-width:480px;width:100%;max-height:78vh;
-            background:rgba(255,255,255,.85);
-            backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);
-            border-radius:20px;
-            box-shadow:0 24px 64px rgba(0,0,0,.28),0 0 0 .5px rgba(255,255,255,.4);
-            display:flex;flex-direction:column;overflow:hidden;
-            animation:noticePop .32s var(--spring);
+        .term-card .btn-sm:active{transform:scale(.93);background:rgba(255,255,255,.3);}
+        #term-host{
+            background:#0c0c10;border-radius:12px;padding:8px;height:300px;overflow:hidden;
+            box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
         }
-        .notice-header{
-            padding:14px 18px;display:flex;align-items:center;gap:10px;
-            border-bottom:1px solid rgba(0,0,0,.06);
+        #term-host .xterm{height:100%;}
+        .term-inputbar{display:flex;align-items:center;gap:8px;margin-top:10px;}
+        .term-prompt{font-family:monospace;font-weight:700;color:var(--ok);font-size:15px;}
+        .term-cmd-input{
+            flex:1;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.18);border-radius:10px;
+            padding:10px 12px;font-family:monospace;font-size:13px;color:#eaeaea;outline:none;
         }
-        .notice-title{font-size:var(--fs-md);font-weight:700;color:var(--tx);}
-        .notice-badge{
-            font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;
-            background:rgba(59,130,246,.15);color:#3b82f6;
-        }
-        .notice-badge.local{background:rgba(142,142,147,.18);color:#8e8e93;}
-        .notice-close{
-            margin-left:auto;width:30px;height:30px;border:none;border-radius:50%;
-            background:rgba(0,0,0,.06);color:var(--tx2);
-            font-size:18px;line-height:1;cursor:pointer;
-        }
-        .notice-close:active{transform:scale(.92);background:rgba(0,0,0,.12);}
-        .notice-body{
-            padding:14px 18px 18px;margin:0;
-            font-family:inherit;font-size:var(--fs-sm);line-height:1.6;color:var(--tx);
-            white-space:pre-wrap;word-break:break-word;overflow-y:auto;flex:1;
-        }
-        @keyframes noticePop{
-            from{opacity:0;transform:scale(.94) translateY(6px);}
-            to  {opacity:1;transform:scale(1)   translateY(0);}
-        }
-        @keyframes noticeFade{
-            from{opacity:0;}to{opacity:1;}
-        }
-    </style>
+        .term-cmd-input:focus{border-color:var(--ac);}
+        .term-run{background:var(--ok)!important;color:#fff!important;}
 
+        /* 弹窗 (编辑器 + 属性) */
+        .fm-modal{
+            position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;
+            background:rgba(0,0,0,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:16px;
+        }
+        .fm-modal.open{display:flex;}
+        .fm-modal-card{
+            width:100%;max-width:520px;max-height:88vh;display:flex;flex-direction:column;
+            background:rgba(30,30,38,.78);backdrop-filter:blur(20px) saturate(160%);
+            -webkit-backdrop-filter:blur(20px) saturate(160%);border-radius:18px;padding:16px;
+            box-shadow:0 0 0 1.5px rgba(255,255,255,.18),0 20px 60px rgba(0,0,0,.5);color:#f0f0f3;
+        }
+        .fm-modal-head{display:flex;align-items:center;justify-content:space-between;}
+        .fm-modal-title{font-size:16px;font-weight:700;}
+        .fm-modal-sub{font-size:11px;font-family:monospace;color:#a8a8b0;margin:4px 0 10px;word-break:break-all;}
+        .fm-editor{
+            flex:1;min-height:240px;background:#0c0c10;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+            padding:12px;font-family:monospace;font-size:13px;line-height:1.5;color:#e6e6e6;
+            outline:none;resize:none;white-space:pre;overflow:auto;
+        }
+        .fm-modal-foot{display:flex;gap:10px;margin-top:12px;}
+        .fm-modal-foot .btn{flex:1;padding:11px 0;border-radius:12px;font-size:14px;font-weight:600;
+            background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.2);cursor:pointer;}
+        .fm-modal-foot .btn:active{transform:scale(.97);}
+        .fm-modal-save{background:var(--ok)!important;}
+
+        /* 属性弹窗 */
+        .fm-prop-card{max-width:440px;}
+        .fm-prop-info{
+            background:rgba(0,0,0,.25);border-radius:10px;padding:10px 12px;font-family:monospace;
+            font-size:11px;line-height:1.7;color:#c8c8d0;white-space:pre-wrap;word-break:break-all;margin-bottom:12px;
+        }
+        .fm-prop-section-title{font-size:12px;font-weight:600;color:#b8b8c0;margin-bottom:8px;}
+        .fm-perm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+        .fm-perm-col{background:rgba(0,0,0,.2);border-radius:10px;padding:8px;}
+        .fm-perm-col h5{font-size:11px;text-align:center;color:#a8a8b0;margin-bottom:6px;font-weight:600;}
+        .fm-perm-check{display:flex;align-items:center;gap:6px;font-size:12px;color:#d0d0d8;margin:3px 0;cursor:pointer;}
+        .fm-perm-check input{width:15px;height:15px;accent-color:var(--ok);}
+        .fm-perm-octal{display:flex;align-items:center;gap:8px;font-size:12px;color:#b8b8c0;margin-bottom:14px;}
+        .fm-octal-input{
+            width:70px;background:#0c0c10;border:1px solid rgba(255,255,255,.18);border-radius:8px;
+            padding:7px 10px;font-family:monospace;font-size:14px;color:#fff;text-align:center;outline:none;
+        }
+        .fm-perm-octal .btn-sm{background:var(--ac);color:#fff;border:none;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;}
+        .fm-prop-actions{display:flex;flex-direction:column;gap:8px;}
+        .fm-prop-actions .btn{padding:11px 0;border-radius:12px;font-size:14px;font-weight:600;border:none;cursor:pointer;color:#fff;}
+        .fm-prop-actions .btn:active{transform:scale(.97);}
+        .fm-prop-exec{background:var(--ok);}
+        .fm-prop-rename{background:rgba(255,255,255,.16);}
+        .fm-prop-del{background:rgba(255,59,48,.55);}
+
+        
+        /* 独立页顶栏 */
+        .fm-topbar{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+        .fm-topbar .back-btn{flex:none;padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(255,255,255,.18);color:var(--tx);border:none;cursor:pointer;backdrop-filter:blur(4px);}
+        .fm-topbar .back-btn:active{transform:scale(.95);background:rgba(255,255,255,.3);}
+        .fm-topbar-title{font-size:16px;font-weight:700;color:var(--tx);}
+        .fm-term-entry{margin-left:auto;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.16);border:none;border-radius:20px;padding:5px 11px;font-size:11px;font-weight:700;color:var(--tx);cursor:pointer;backdrop-filter:blur(6px);}
+        .fm-term-entry:active{transform:scale(.93);background:rgba(255,255,255,.3);}
+        .fm-term-entry .px-cat{width:15px;height:13px;display:block;}
+        #page-files.active,#page-fileprop.active,#page-fileedit.active,#page-fileterm.active{display:flex;flex-direction:column;gap:16px;margin-top:-42px;}
+        #page-models.active{display:flex;flex-direction:column;gap:16px;margin-top:-42px;}
+        /* 机型卡 (2列网格, 窗口内滑动) */
+        .model-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:62vh;overflow-y:auto;padding:2px;}
+        .model-card{display:flex;flex-direction:column;gap:6px;padding:12px;border-radius:14px;background:rgba(255,255,255,.14);backdrop-filter:blur(4px);min-height:88px;}
+        .model-card .mc-name{font-size:14px;font-weight:700;color:var(--tx);line-height:1.25;}
+        .model-card .mc-sub{font-size:10px;color:var(--tx3);font-family:monospace;}
+        .model-card .mc-toggle{margin-top:auto;display:flex;justify-content:flex-end;}
+        .model-card{position:relative;}
+        .mc-bottom{display:flex;align-items:flex-end;justify-content:space-between;margin-top:auto;}
+        .mc-logo{flex-shrink:0;display:flex;align-items:center;height:22px;}
+        .mc-logo-svg{width:20px;}
+        .mc-logo-svg svg{width:20px;height:20px;display:block;}
+        .mc-logo-text{font-weight:800;letter-spacing:.3px;line-height:1;font-family:'ZhiYuan','OPPO Sans','MiSans','HarmonyOS Sans',Roboto,sans-serif;}
+        .mc-logo-box{background:#EB0028;color:#fff;font-weight:900;font-size:11px;line-height:1;padding:3px 5px;border-radius:5px;}
+
+        /* 属性页 */
+        .fm-prop-name{font-size:12px;font-family:monospace;color:var(--tx2);word-break:break-all;margin-bottom:10px;}
+        .fm-prop-info{background:rgba(0,0,0,.28);border-radius:10px;padding:10px 12px;font-family:monospace;font-size:11px;line-height:1.7;color:#dcdce4;white-space:pre-wrap;word-break:break-all;margin-bottom:14px;}
+        .fm-prop-section-title{font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:8px;}
+        .fm-perm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+        .fm-perm-col{background:rgba(0,0,0,.22);border-radius:10px;padding:8px;}
+        .fm-perm-col h5{font-size:11px;text-align:center;color:var(--tx2);margin-bottom:6px;font-weight:600;}
+        .fm-perm-check{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tx);margin:4px 0;cursor:pointer;}
+        .fm-perm-check input{width:16px;height:16px;accent-color:var(--ok);}
+        .fm-perm-octal{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tx2);margin-bottom:16px;}
+        .fm-octal-input{width:72px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:7px 10px;font-family:monospace;font-size:15px;color:var(--tx);text-align:center;outline:none;}
+        .fm-perm-octal .btn-sm{background:var(--ac);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;}
+        .fm-prop-actions{display:flex;flex-direction:column;gap:10px;}
+        .fm-prop-actions .btn{padding:13px 0;border-radius:12px;font-size:15px;font-weight:600;border:none;cursor:pointer;color:#fff;}
+        .fm-prop-actions .btn:active{transform:scale(.97);}
+        .fm-prop-edit{background:var(--ac);}
+        .fm-prop-exec{background:var(--ok);}
+        .fm-prop-rename{background:rgba(255,255,255,.22);color:var(--tx)!important;}
+        .fm-prop-del{background:rgba(255,59,48,.55);}
+
+        /* 编辑页 */
+        .fm-editor{width:100%;min-height:46vh;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:12px;font-family:monospace;font-size:13px;line-height:1.55;color:#eaeaea;outline:none;resize:vertical;white-space:pre;overflow:auto;}
+        .fm-edit-foot{display:flex;gap:10px;margin-top:12px;}
+        .fm-edit-foot .btn{flex:1;padding:12px 0;border-radius:12px;font-size:14px;font-weight:600;background:rgba(255,255,255,.16);color:var(--tx);border:1px solid rgba(255,255,255,.22);cursor:pointer;}
+        .fm-edit-foot .btn:active{transform:scale(.97);}
+        .fm-modal-save{background:var(--ok)!important;color:#fff!important;border:none!important;}
+        .fm-modal-sub{font-size:11px;font-family:monospace;color:var(--tx2);margin-bottom:10px;word-break:break-all;}
+
+        /* 文件管理器卡片 */
+        .term-fm-card{padding:14px;}
+        .fm-pathbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+        .fm-icon-btn{flex:none;width:36px;height:36px;border:none;border-radius:10px;background:rgba(255,255,255,.2);color:var(--tx);font-size:16px;font-weight:700;cursor:pointer;backdrop-filter:blur(4px);transition:transform .2s var(--spring);}
+        .fm-icon-btn:active{transform:scale(.9);background:rgba(255,255,255,.32);}
+        .fm-path{flex:1;min-width:0;background:rgba(0,0,0,.22);border-radius:10px;padding:9px 12px;font-family:monospace;font-size:12px;color:var(--tx);white-space:nowrap;overflow-x:auto;direction:rtl;text-align:left;}
+        .fm-quicknav{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px;padding-bottom:2px;}
+        .fm-chip{flex:none;border:none;border-radius:999px;padding:6px 13px;font-size:11px;font-weight:600;background:rgba(255,255,255,.18);color:var(--tx2);cursor:pointer;backdrop-filter:blur(4px);transition:transform .2s var(--spring);}
+        .fm-chip:active{transform:scale(.92);background:rgba(255,255,255,.32);}
+        .fm-searchbar{display:flex;gap:8px;margin-bottom:10px;}
+        .fm-search-input{flex:1;min-width:0;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:9px 12px;font-size:13px;color:var(--tx);outline:none;}
+        .fm-search-input:focus{border-color:var(--ac);}
+        .fm-search-btn{flex:none;background:var(--ac)!important;color:#fff!important;border:none;border-radius:10px;padding:0 16px;font-size:12px;font-weight:600;cursor:pointer;}
+        .fm-list{max-height:56vh;overflow-y:auto;border-radius:12px;background:rgba(0,0,0,.16);padding:4px;}
+        .fm-empty{padding:22px;text-align:center;color:var(--tx3);font-size:13px;}
+        .fm-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:9px;cursor:pointer;transition:background .12s;}
+        .fm-row:active{background:rgba(255,255,255,.16);}
+        .fm-row .fm-ico{flex:none;font-size:18px;width:22px;text-align:center;}
+        .fm-row .fm-meta{flex:1;min-width:0;}
+        .fm-row .fm-name{font-size:13px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .fm-row .fm-detail{font-size:10px;color:var(--tx3);font-family:monospace;margin-top:1px;}
+        .fm-row .fm-perm-tag{flex:none;font-size:9px;font-family:monospace;color:var(--tx2);background:rgba(255,255,255,.16);border-radius:6px;padding:2px 6px;}
+        .fm-ico.dir{color:#ffd166;} .fm-ico.exe{color:var(--ok);} .fm-ico.lnk{color:var(--ac);}
+
+        /* 进程页：文件管理入口 */
+        .fm-entry-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border:none;border-radius:14px;background:rgba(255,255,255,.16);color:var(--tx);cursor:pointer;text-align:left;backdrop-filter:blur(4px);transition:transform .2s var(--spring),background .15s;}
+        .fm-entry-btn:active{transform:scale(.97);background:rgba(255,255,255,.26);}
+        .fm-entry-ico{font-size:24px;}
+        .fm-entry-txt{flex:1;}
+        .fm-entry-txt b{display:block;font-size:15px;font-weight:600;}
+        .fm-entry-txt span{font-size:11px;color:var(--tx3);}
+        .fm-entry-arrow{font-size:18px;color:var(--tx3);}
+
+        /* 终端 */
+        .term-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+        .term-toolbar-title{font-size:12px;font-weight:600;color:var(--tx2);display:flex;align-items:center;gap:6px;}
+        .term-toolbar-btns{display:flex;gap:6px;}
+        .term-card .btn-sm,.fm-perm-octal .btn-sm,#fm-apply-perm{cursor:pointer;}
+        .term-card .btn-sm{background:rgba(255,255,255,.2);border:none;border-radius:20px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--tx);backdrop-filter:blur(4px);}
+        .term-card .btn-sm:active{transform:scale(.93);background:rgba(255,255,255,.3);}
+        #term-host{background:#0c0c10;border-radius:12px;padding:8px;height:48vh;min-height:280px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);}
+        #term-host .xterm{height:100%;}
+        .term-inputbar{display:flex;align-items:center;gap:8px;margin-top:10px;}
+        .term-prompt{font-family:monospace;font-weight:700;color:var(--ok);font-size:15px;}
+        .term-cmd-input{flex:1;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:10px 12px;font-family:monospace;font-size:13px;color:#eaeaea;outline:none;}
+        .term-cmd-input:focus{border-color:var(--ac);}
+        .term-run{background:var(--ok)!important;color:#fff!important;}
+
+        /* 删除确认弹窗 */
+        .fm-modal{position:fixed;inset:0;z-index:600;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:24px;}
+        .fm-modal.open{display:flex;}
+        .fm-confirm-card{width:100%;max-width:340px;background:rgba(34,34,42,.92);border-radius:18px;padding:22px;box-shadow:0 0 0 1.5px rgba(255,255,255,.16),0 20px 60px rgba(0,0,0,.5);color:#f0f0f3;text-align:center;}
+        .fm-confirm-title{font-size:17px;font-weight:700;margin-bottom:8px;}
+        .fm-confirm-sub{font-size:12px;font-family:monospace;color:#b0b0b8;word-break:break-all;margin-bottom:18px;line-height:1.5;}
+        .fm-confirm-foot{display:flex;gap:10px;}
+        .fm-confirm-foot .btn{flex:1;padding:11px 0;border-radius:12px;font-size:14px;font-weight:600;border:none;cursor:pointer;}
+        .fm-confirm-cancel{background:rgba(255,255,255,.16);color:#fff;}
+        .fm-confirm-ok{background:#ff3b30;color:#fff;}
+        .fm-confirm-foot .btn:active{transform:scale(.96);}
+        /* ===== 雪花+猫动画 ===== */
+        @keyframes frzSnow{0%{transform:translateY(-8px) translateX(0);opacity:1}100%{transform:translateY(62px) translateX(var(--sx));opacity:0}}
+        .frz-snow{position:absolute;top:-4px;font-size:9px;color:rgba(255,255,255,0.85);pointer-events:none;animation:frzSnow var(--dur) ease-in var(--dl) infinite;text-shadow:0 0 4px #fff;}
+        @keyframes yyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+        @keyframes yyBlush{0%,100%{opacity:0.25}50%{opacity:0.5}}
+
+        /* ===================== 二次元装饰层 ===================== */
+        #anime-deco{
+            position:fixed;inset:0;pointer-events:none;z-index:3;overflow:hidden;
+            background:
+              radial-gradient(circle at 0% 0%, rgba(255,170,215,.20), transparent 38%),
+              radial-gradient(circle at 100% 6%, rgba(175,200,255,.18), transparent 40%),
+              radial-gradient(circle at 8% 100%, rgba(255,225,170,.14), transparent 40%),
+              radial-gradient(circle at 100% 100%, rgba(190,255,235,.15), transparent 42%);
+        }
+        #anime-deco .petal{
+            position:absolute;top:-8vh;width:14px;height:14px;opacity:0;
+            background:radial-gradient(circle at 30% 30%,#ffe1ee,#ff9ec7);
+            border-radius:100% 0 100% 0;
+            filter:drop-shadow(0 1px 2px rgba(255,140,190,.4));
+            animation:petalFall linear infinite;
+        }
+        @keyframes petalFall{
+            0%{transform:translateY(-8vh) translateX(0) rotate(0);opacity:0}
+            12%{opacity:.9}
+            88%{opacity:.9}
+            100%{transform:translateY(114vh) translateX(46px) rotate(560deg);opacity:0}
+        }
+        #anime-deco .petal:nth-child(1){left:6%;animation-duration:11s;animation-delay:0s}
+        #anime-deco .petal:nth-child(2){left:16%;animation-duration:14s;animation-delay:2s;background:radial-gradient(circle at 30% 30%,#fff0f6,#ffb3d1)}
+        #anime-deco .petal:nth-child(3){left:27%;animation-duration:9s;animation-delay:1s}
+        #anime-deco .petal:nth-child(4){left:38%;animation-duration:13s;animation-delay:4s;background:radial-gradient(circle at 30% 30%,#e9dcff,#c4a3ff)}
+        #anime-deco .petal:nth-child(5){left:49%;animation-duration:10s;animation-delay:3s}
+        #anime-deco .petal:nth-child(6){left:60%;animation-duration:15s;animation-delay:1.5s}
+        #anime-deco .petal:nth-child(7){left:71%;animation-duration:12s;animation-delay:5s;background:radial-gradient(circle at 30% 30%,#d8ecff,#9ec8ff)}
+        #anime-deco .petal:nth-child(8){left:82%;animation-duration:9.5s;animation-delay:2.5s}
+        #anime-deco .petal:nth-child(9){left:91%;animation-duration:13.5s;animation-delay:.8s}
+        #anime-deco .petal:nth-child(10){left:33%;animation-duration:16s;animation-delay:6s;background:radial-gradient(circle at 30% 30%,#fff0f6,#ffb3d1)}
+        #anime-deco .petal:nth-child(11){left:54%;animation-duration:11.5s;animation-delay:7s}
+        #anime-deco .petal:nth-child(12){left:76%;animation-duration:14.5s;animation-delay:3.6s;background:radial-gradient(circle at 30% 30%,#e9dcff,#c4a3ff)}
+        #anime-deco .spark{
+            position:absolute;font-size:13px;opacity:0;color:#fff;
+            text-shadow:0 0 7px #ffd0ec,0 0 12px rgba(180,200,255,.7);
+            animation:sparkTwinkle ease-in-out infinite;
+        }
+        #anime-deco .spark::before{content:'✦'}
+        @keyframes sparkTwinkle{
+            0%,100%{opacity:0;transform:scale(.3) rotate(0)}
+            50%{opacity:.95;transform:scale(1.1) rotate(20deg)}
+        }
+        #anime-deco .spark:nth-child(13){top:12%;left:10%;animation-duration:3.2s;animation-delay:0s}
+        #anime-deco .spark:nth-child(14){top:22%;left:84%;animation-duration:2.6s;animation-delay:.6s;font-size:10px}
+        #anime-deco .spark:nth-child(15){top:40%;left:6%;animation-duration:3.6s;animation-delay:1.2s;font-size:16px}
+        #anime-deco .spark:nth-child(16){top:55%;left:90%;animation-duration:2.9s;animation-delay:.3s}
+        #anime-deco .spark:nth-child(17){top:68%;left:14%;animation-duration:3.3s;animation-delay:1.8s;font-size:11px}
+        #anime-deco .spark:nth-child(18){top:78%;left:80%;animation-duration:2.7s;animation-delay:.9s;font-size:15px}
+        #anime-deco .spark:nth-child(19){top:33%;left:48%;animation-duration:4s;animation-delay:2.2s;font-size:9px}
+        #anime-deco .spark:nth-child(20){top:88%;left:40%;animation-duration:3.1s;animation-delay:1.5s}
+        @media (prefers-reduced-motion:reduce){
+            #anime-deco .petal,#anime-deco .spark{animation:none;opacity:.5}
+        }
+        /* 卡片粉彩磨砂 + 柔粉光晕 */
+        .card{background:rgba(255,246,251,.05)!important;}
+        .card::after{
+            content:'';position:absolute;inset:0;border-radius:inherit;
+            box-shadow:inset 0 0 18px rgba(255,160,205,.16),inset 0 0 32px rgba(180,200,255,.08);
+            pointer-events:none;z-index:-1;
+        }
+
+        /* ===== 平板/大屏自适应 =====
+           按视口宽高双条件判定(宽和高都够大才算平板)，避免大屏手机横屏被误放大；
+           横竖屏、折叠屏展开、分屏均自动响应；仅放大居中内容列与 dock，不动背景/WebGL 画布。
+           容器净缩放 = html(0.9) × 下方 zoom，已校验各档位视觉宽度不溢出视口。 */
+        @media (min-width:600px) and (min-height:600px){
+            .container{ zoom:1.3; }
+            .floating-dock{ zoom:1.3; }
+        }
+        @media (min-width:840px) and (min-height:600px){
+            .container{ zoom:1.6; }
+            .floating-dock{ zoom:1.5; }
+        }
+        @media (min-width:1100px) and (min-height:700px){
+            .container{ zoom:1.9; }
+            .floating-dock{ zoom:1.7; }
+        }
+
+        .notice-modal { display:none; position:fixed; inset:0; background:rgba(8,20,40,.42); backdrop-filter:blur(9px); -webkit-backdrop-filter:blur(9px); z-index:9999; align-items:center; justify-content:center; }
+        .notice-modal.show { display:flex; }
+        .notice-box { position:relative; width:86%; max-width:430px; max-height:72%; overflow:auto; padding:48px 20px 22px;
+            background:linear-gradient(160deg, rgba(135,206,250,.34), rgba(79,172,254,.20));
+            backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%);
+            border:1px solid rgba(255,255,255,.45); border-radius:20px; color:#0c2f52; line-height:1.7;
+            box-shadow:0 12px 44px rgba(31,90,160,.38), inset 0 1px 0 rgba(255,255,255,.5); }
+        .notice-title { position:absolute; top:15px; left:18px; display:flex; align-items:center; gap:7px;
+            font-size:15px; font-weight:800; letter-spacing:1px; color:#0d63c4; }
+        .notice-title::before { content:""; width:9px; height:9px; border-radius:50%; background:#4facfe; box-shadow:0 0 9px #4facfe; }
+        .modal-hint { margin-top:16px; text-align:center; font-size:12px; color:rgba(12,47,82,.55); }
+
+        </style>
+
+    <link rel="stylesheet" href="xterm.css">
+    <script src="xterm.js"></script>
+    <script src="xterm-addon-fit.js"></script>
 </head>
 <body>
 
 <div id="bg-layer"></div>
+<div id="anime-deco" aria-hidden="true"><span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span><span class="spark"></span></div>
 <canvas id="lens-canvas"></canvas>
 <div class="container">
 
@@ -484,8 +806,8 @@
                     <div class="st-mini-val" id="devModel">--</div>
                 </div>
                 <div class="st-mini">
-                    <div class="st-mini-label">内核版本</div>
-                    <div class="st-mini-val" id="kernelShort">--</div>
+                    <div class="st-mini-label">处理器型号</div>
+                    <div class="st-mini-val" id="cpuModelShort">--</div>
                 </div>
             </div>
         </div>
@@ -497,7 +819,7 @@
             <div class="sys-row"><span class="sys-label">安全补丁</span><span class="sys-value" id="secPatch">--</span></div>
             <div class="sys-row"><span class="sys-label">设备指纹</span><span class="sys-value" id="fingerprint">--</span></div>
             <div class="sys-row"><span class="sys-label">SELinux</span><span class="sys-value" id="selinux">--</span></div>
-            <div class="sys-row" style="border-bottom:none;"><span class="sys-label">模块版本</span><span class="sys-value" id="moduleVer">v3.4</span></div>
+            <div class="sys-row" style="border-bottom:none;"><span class="sys-label">模块版本</span><span class="sys-value" id="moduleVer">v2.5</span></div>
         </div>
     </div>
 
@@ -534,14 +856,6 @@
                 <div style="font-size:var(--fs-xs); color:var(--tx3); margin-top:8px; text-align:center; line-height:1.4;">无法全机型兼容 是否有效请自测<br>建议每一个档位都试一遍</div>
             </div>
             <div style="max-height:460px;overflow-y:auto;overflow-x:hidden;">
-            <div class="func-switch-item">
-                <div class="func-switch-header">
-                    <span class="func-switch-title">解除ColorOS云控锁帧</span>
-                    <label class="toggle"><input type="checkbox" id="colorosLockToggle" onchange="toggleColorOSLock()"><span class="toggle-slider"></span></label>
-                </div>
-                <div class="func-switch-desc">启用后解除ColorOS云控限制，提升性能表现</div>
-                <div class="led-container" id="led-colorosLock" style="display: none;"><span class="running-led"></span> 运行中</div>
-            </div>
             <div class="func-switch-item">
                 <div class="func-switch-header">
                     <span class="func-switch-title">增强ColorOS信号</span>
@@ -595,7 +909,20 @@
                     <span class="func-switch-title">伪装白名单CPU型号</span>
                     <label class="toggle"><input type="checkbox" id="cpuSpoofToggle" onchange="toggleCpuSpoof()"><span class="toggle-slider"></span></label>
                 </div>
-                <div class="func-switch-desc">伪装白名单CPU信息概率解决某粥聚框问题</div>
+                <div class="func-switch-desc">勾选的游戏在前台/后台运行时全局替换 /proc/cpuinfo，全部退出自动还原</div>
+                <div id="cpuProfileRow" style="display:flex;gap:6px;align-items:center;margin-top:8px;flex-wrap:wrap;">
+                    <span style="font-size:var(--fs-xs);color:var(--tx3);width:100%;margin-bottom:2px;">伪装型号</span>
+                    <button class="cpuProfBtn" data-prof="9000" onclick="setCpuProfile('9000')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">麒麟9000</button>
+                    <button class="cpuProfBtn" data-prof="9000s" onclick="setCpuProfile('9000s')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">麒麟9000S</button>
+                    <button class="cpuProfBtn" data-prof="9020" onclick="setCpuProfile('9020')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">麒麟9020</button>
+                    <button class="cpuProfBtn" data-prof="9020a" onclick="setCpuProfile('9020a')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">麒麟9020A</button>
+                    <button class="cpuProfBtn" data-prof="xuanjie_o1" onclick="setCpuProfile('xuanjie_o1')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">玄戒O1</button>
+                    <button class="cpuProfBtn" data-prof="xuanjie_o3" onclick="setCpuProfile('xuanjie_o3')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">玄戒O3</button>
+                    <button class="cpuProfBtn" data-prof="9030pro" onclick="setCpuProfile('9030pro')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">麒麟9030Pro</button>
+                    <button class="cpuProfBtn" data-prof="exynos2600" onclick="setCpuProfile('exynos2600')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">猎户座2600</button>
+                    <button class="cpuProfBtn" data-prof="a17pro" onclick="setCpuProfile('a17pro')" style="border:none;border-radius:20px;padding:4px 11px;font-size:10px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.14);color:var(--tx);">A17 Pro</button>
+                </div>
+                <button onclick="openCpuGames()" style="margin-top:10px;width:100%;border:none;border-radius:12px;padding:9px;font-size:var(--fs-xs);font-weight:700;background:linear-gradient(135deg,rgba(120,170,255,.28),rgba(160,200,255,.18));color:var(--tx);cursor:pointer;">自定义游戏伪装</button>
                 <div class="led-container" id="led-cpuSpoof" style="display:none;"><span class="running-led"></span> 运行中</div>
                 <div id="cpuSpoofWindow" style="display:none;margin-top:10px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
@@ -605,11 +932,18 @@
                     <div class="process-window" id="cpuSpoofLog" style="max-height:120px;font-size:10px;line-height:1.6;">检查中...</div>
                 </div>
             </div>
-            </div>
-        </div>
-    </div>
+</div>
+<div id="jailbreakEntry" class="card" style="display:none; margin-top:16px;">
+<div class="section-title">KSU越狱工具</div>
+<button class="fm-entry-btn" onclick="switchPage('jailbreak')" style="margin-bottom:0;">
+<span class="fm-entry-txt"><b>KSU越狱工具</b><span>重载模块 / 热重启zygote / 环境隐藏</span></span>
+<span class="fm-entry-arrow">-></span>
+</button>
+</div>
+</div>
+</div>
 
-    <div id="page-env" class="page">
+<div id="page-env" class="page">
         <div class="global-header">
             <div class="main-title">苦涩or苳季</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
@@ -618,14 +952,51 @@
             <div class="ch" style="margin-bottom: 12px;">
                 <span class="ct">检测环境</span>
                 <button class="btn" id="btn-detect" onclick="runDetection()" style="padding: 6px 12px; font-size: var(--fs-sm);">▶ 开始检测</button>
+                <button class="btn" onclick="runEnvAudit()" style="padding: 6px 12px; font-size: var(--fs-sm); margin-left: 6px; background: rgba(100,200,100,.2);">▶ 深度审计</button>
             </div>
             <div id="detect-result" style="max-height: 400px; overflow-y: auto; font-size: var(--fs-xs); line-height: 1.5;">
                 <div style="color: var(--tx3); text-align: center; padding: 20px;">点击上方按钮开始环境检测</div>
             </div>
+            <div id="audit-result" style="display:none;max-height:400px;overflow-y:auto;font-size:var(--fs-xs);line-height:1.5;white-space:pre-wrap;margin-top:8px;"></div>
         </div>
     </div>
 
-    <div id="page-process" class="page">
+<div id="page-jailbreak" class="page">
+<div class="global-header">
+<div class="main-title">苦涩or苳季</div>
+<div class="sub-title mottoText">KSU越狱工具</div>
+</div>
+<div style="margin-bottom:12px;">
+<button class="btn back-btn" onclick="switchPage('func')"><- 返回功能</button>
+</div>
+<div class="card">
+<div class="section-title">KSU越狱模式工具</div>
+<div style="font-size:10px;color:var(--tx3);margin-bottom:16px;line-height:1.5;">重启后root会丢失，需要重载模块</div>
+
+<div class="func-switch-item" style="border-top:none;padding-top:0;">
+<div class="func-switch-header"><span class="func-switch-title">重载KSU模块</span></div>
+<div class="func-switch-desc">执行ksud启动并覆盖安装KSU管理器触发模块重载。越狱重启后必须执行。</div>
+<button class="btn" onclick="runKsuReload()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:700;border:none;border-radius:12px;">立即重载</button>
+</div>
+<div class="func-switch-item">
+<div class="func-switch-header"><span class="func-switch-title">热重启 Zygote</span></div>
+<div class="func-switch-desc">耗尽PID后重启zygote，使模块配置立即生效。</div>
+<button class="btn" onclick="runRcqXt()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;font-weight:700;border:none;border-radius:12px;">热重启</button>
+</div>
+<div class="func-switch-item">
+<div class="func-switch-header"><span class="func-switch-title">隐藏ROOT环境</span></div>
+<div class="func-switch-desc">重置系统属性，隐藏BL解锁/root痕迹。</div>
+<button class="btn" onclick="runHideEnv()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;font-weight:700;border:none;border-radius:12px;">隐藏环境</button>
+</div>
+<div class="func-switch-item">
+<div class="func-switch-header"><span class="func-switch-title">清理 /data/local/tmp</span></div>
+<div class="func-switch-desc">清理临时目录残留文件。</div>
+<button class="btn" onclick="runCleanTmp()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff;font-weight:700;border:none;border-radius:12px;">清理</button>
+</div>
+</div>
+</div>
+
+<div id="page-process" class="page">
         <div class="global-header">
             <div class="main-title">苦涩or苳季</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
@@ -653,6 +1024,20 @@
                 暂无进程数据，点击刷新加载...
             </div>
         </div>
+        <div class="card" style="margin-top:14px;">
+            <button class="fm-entry-btn" onclick="switchPage('models')">
+                <span class="fm-entry-ico">📱</span>
+                <span class="fm-entry-txt"><b>全局改机型</b><span>伪装设备机型 · 开关式 · 重启生效/恢复</span></span>
+                <span class="fm-entry-arrow">→</span>
+            </button>
+        </div>
+        <div class="card" style="margin-top:14px;">
+            <button class="fm-entry-btn" onclick="switchPage('freeze')">
+                <span class="fm-entry-ico">❄</span>
+                <span class="fm-entry-txt"><b>自定义冻结应用</b><span>游戏启动时自动冻结 · 退出后自动解冻</span></span>
+                <span class="fm-entry-arrow">→</span>
+            </button>
+        </div>
     </div>
 
     <div id="page-settings" class="page">
@@ -663,12 +1048,12 @@
         <div style="padding-top: 30px;">
             <div class="card settings-spacing-top">
                 <div style="font-weight:700; margin-bottom:12px;">基础设置</div>
-                <div class="sys-row"><span class="sys-label">强制开启隐藏</span><label class="toggle"><input type="checkbox" id="forceHideToggle" onchange="toggleForceHide()"><span class="toggle-slider"></span></label></div>
+                <div class="sys-row"><span class="sys-label">防标记（游戏时挂载隐藏空目录）</span><label class="toggle"><input type="checkbox" id="antiMarkToggle" onchange="toggleAntiMark()"><span class="toggle-slider"></span></label></div>
                 <div class="sys-row"><span class="sys-label">常驻通知</span><label class="toggle"><input type="checkbox" id="notifyAlwaysToggle" onchange="toggleNotifyAlways()"><span class="toggle-slider"></span></label></div>
                 <div class="sys-row" style="border-bottom:none"><span class="sys-label">自动清理腾讯ano文件</span><label class="toggle"><input type="checkbox" id="autoCleanToggle" onchange="toggleAutoClean()"><span class="toggle-slider"></span></label></div>
             </div>
             <div class="card settings-appearance-card">
-                <div style="font-weight:700; margin-bottom:14px;">外观设置</div>
+                <div style="font-weight:700; margin-bottom:14px;">外观与液态玻璃</div>
                 <div class="btn-row">
                     <button class="btn" onclick="pickBg()">选择背景</button>
                     <button class="btn" onclick="resetBg()">默认背景</button>
@@ -678,9 +1063,7 @@
                     <input type="range" id="blurSlider" min="0" max="40" value="18" oninput="updateBlur(this.value)">
                     <span class="blur-value"><span id="blurValDisplay">18</span><span class="blur-unit">px</span></span>
                 </div>
-            </div>
-            <div class="card" style="padding:16px; margin-top:10px;">
-                <div style="font-weight:700; margin-bottom:14px;">液态玻璃调节</div>
+                <div style="height:1px;background:rgba(255,255,255,.18);margin:14px 0;"></div>
                 <div class="blur-control-row" style="margin-bottom:12px;">
                     <span class="blur-label">折射强度</span>
                     <input type="range" id="lsStrength" min="0" max="60" value="26" oninput="updateLensParam('strength',this.value)">
@@ -740,12 +1123,10 @@
             <div class="main-title">苦涩or苳季</div>
             <div class="sub-title mottoText">死寂的心 因你而燃</div>
         </div>
-        <div class="card" style="margin-bottom: 12px; padding: 12px 14px; display:flex; align-items:center; justify-content:space-between;">
-            <div style="display:flex; flex-direction:column; gap:2px;">
-                <div style="font-weight:700; font-size: var(--fs-sm);">公告</div>
-                <div style="font-size: var(--fs-xs); color: var(--tx3);">首次打开界面自动弹出;点右侧再看</div>
-            </div>
-            <button class="btn" style="padding:6px 14px; font-size: var(--fs-xs);" onclick="openNoticeModal()">查看公告</button>
+        <div class="gh-update-card" id="cloudUpdateCard">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-5H8l4-4 4 4h-3v5z"/></svg>
+            <span class="gh-txt"><b>云更新到最新版</b><span id="cloudUpdateSub">点击检查并替换为最新版本</span></span>
+            <span class="gh-arrow">›</span>
         </div>
         <div class="card" style="margin-bottom: 16px; position: relative;">
             <div class="dev-badge">开发 功能 UI</div>
@@ -757,7 +1138,22 @@
                 <div class="nickname-badge"><span class="glow-blue">伦敦最忧郁之人</span></div>
                 <div class="avatar-small-text">命運的褶皺 是你在哭泣</div>
                 <div class="dev-footer">
-                    <button class="dev-qq-btn" onclick="openQQ('https://tool.gljlw.com/qq/?qq=2941806492')">QQ 主页 →</button>
+                    <button class="link-btn qq" onclick="openQQ('https://tool.gljlw.com/qq/?qq=2941806492')">
+                        <svg viewBox="0 0 1024 1024"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.7 53.4 11.3 19 194.3 12.1 247.2 6.2 52.9 5.9 235.9 12.8 247.2-6.2 14-23.5-45.3-45.3-71.7-53.4 54.6-46.1 79.8-110 79.8-159 0 0 52.1 84.6 70.1 82.4 8.4-1 19.4-46.3-14.6-155.8z"/></svg>
+                        QQ 主页
+                    </button>
+                    <button class="link-btn gh" onclick="openQQ('https://github.com/kusesad-1122')">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.838 1.237 1.838 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.42-1.305.762-1.605-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.467-2.38 1.235-3.22-.123-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.24 2.873.118 3.176.77.84 1.232 1.91 1.232 3.22 0 4.61-2.807 5.62-5.48 5.92.43.37.823 1.102.823 2.222 0 1.606-.015 2.9-.015 3.293 0 .32.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                        GitHub
+                    </button>
+                    <button class="link-btn donate-wx" onclick="showDonate('wx')">
+                        <svg viewBox="0 0 24 24"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"/></svg>
+                        捐赠
+                    </button>
+                    <button class="link-btn donate-zfb" onclick="showDonate('zfb')">
+                        <svg viewBox="0 0 24 24"><path d="M21.422 15.358c-2.211-.74-3.137-1.182-5.39-2.06.519-.967.945-2.012 1.272-3.108h-4.34v-1.106h5.302V8.27h-5.301V6.395c0-.336-.246-.535-.546-.535h-2.181v2.41H4.892v.814h5.346v1.106H5.825v.628h8.61c-.245.846-.562 1.641-.92 2.354-1.998-.66-4.13-1.196-5.472-1.196-2.81 0-4.708 1.225-4.946 3.108-.286 2.268 1.345 3.717 3.717 3.717 2.27 0 4.342-1.225 5.953-3.218 2.39 1.155 6.45 3.025 6.45 3.025.566.243 1.04-.05 1.04-.05s.747-1.59-.835-2.21zM6.97 16.62c-1.808 0-2.348-1.43-2.06-2.027.286-.598 1.04-1.345 2.348-1.345 1.5 0 2.838.38 4.448 1.166-1.13 1.47-2.526 2.206-4.736 2.206z"/></svg>
+                        捐赠
+                    </button>
                 </div>
             </div>
         </div>
@@ -771,7 +1167,27 @@
                 <div class="nickname-badge"><span class="glow-pink">糖taffy</span></div>
                 <div class="avatar-small-text">缘来缘去终会散.花开花败总归尘</div>
                 <div class="dev-footer">
-                    <button class="dev-qq-btn" onclick="openQQ('https://tool.gljlw.com/qq/?qq=1363214673')">QQ 主页 →</button>
+                    <button class="link-btn qq" onclick="openQQ('https://tool.gljlw.com/qq/?qq=1363214673')">
+                        <svg viewBox="0 0 1024 1024"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.7 53.4 11.3 19 194.3 12.1 247.2 6.2 52.9 5.9 235.9 12.8 247.2-6.2 14-23.5-45.3-45.3-71.7-53.4 54.6-46.1 79.8-110 79.8-159 0 0 52.1 84.6 70.1 82.4 8.4-1 19.4-46.3-14.6-155.8z"/></svg>
+                        QQ 主页
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card" style="margin-bottom: 16px; position: relative;">
+            <div class="dev-badge">辅助 调度 合作</div>
+            <div class="about-card-content">
+                <div class="avatar-wrapper">
+                    <img class="avatar-img" src="xny.jpg" alt="小鸟游">
+                </div>
+                <div style="font-weight: 700; font-size: var(--fs-md);">小鸟游</div>
+                <div class="nickname-badge"><span class="glow-blue">六花控</span></div>
+                <div class="avatar-small-text">六花天下第一</div>
+                <div class="dev-footer">
+                    <button class="link-btn qq" onclick="openQQ('https://tool.gljlw.com/qqq/?qq=3649695201')">
+                        <svg viewBox="0 0 1024 1024"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.7 53.4 11.3 19 194.3 12.1 247.2 6.2 52.9 5.9 235.9 12.8 247.2-6.2 14-23.5-45.3-45.3-71.7-53.4 54.6-46.1 79.8-110 79.8-159 0 0 52.1 84.6 70.1 82.4 8.4-1 19.4-46.3-14.6-155.8z"/></svg>
+                        QQ 主页
+                    </button>
                 </div>
             </div>
         </div>
@@ -806,14 +1222,158 @@
             <button class="btn" onclick="clearLogFull()" style="margin-top:8px;">清理日志</button>
         </div>
     </div>
+
+    <!-- ===== 自定义冻结应用 (独立页) ===== -->
+    <div id="page-freeze" class="page">
+        <div class="fm-topbar">
+            <button class="btn back-btn" onclick="switchPage('process')">← 返回</button>
+            <span class="fm-topbar-title">自定义冻结应用</span>
+            <div style="width:56px;"></div>
+        </div>
+
+        <div style="max-width:420px;margin:0 auto;padding:6px 16px 100px;display:flex;flex-direction:column;gap:10px;">
+            <!-- 猫头居中 + 雪花 -->
+            <div style="position:relative;width:140px;height:76px;margin:8px auto 0;overflow:visible;">
+                <!-- 雪花：以猫头为中心向两侧分布 -->
+                <span class="frz-snow" style="--sx:5px;--dur:2.1s;--dl:0s;left:4px;">❄</span>
+                <span class="frz-snow" style="--sx:-6px;--dur:2.6s;--dl:0.7s;left:18px;">❄</span>
+                <span class="frz-snow" style="--sx:6px;--dur:2.0s;--dl:1.2s;left:36px;">❄</span>
+                <span class="frz-snow" style="--sx:-5px;--dur:2.4s;--dl:0.3s;left:56px;">❄</span>
+                <span class="frz-snow" style="--sx:5px;--dur:1.9s;--dl:0.8s;left:84px;">❄</span>
+                <span class="frz-snow" style="--sx:-4px;--dur:2.2s;--dl:1.4s;left:104px;">❄</span>
+                <span class="frz-snow" style="--sx:4px;--dur:2.3s;--dl:0.1s;left:122px;">❄</span>
+                <!-- 猫SVG：绝对居中 -->
+                <svg id="frz-cat-svg" viewBox="0 0 80 72" width="72" height="72" xmlns="http://www.w3.org/2000/svg"
+                     style="position:absolute;left:50%;top:0;transform:translateX(-50%);cursor:pointer;filter:drop-shadow(0 0 8px rgba(255,255,255,0.22));animation:yyFloat 3.2s ease-in-out infinite;display:block;">
+                    <polygon points="14,30 21,10 30,27" fill="white"/>
+                    <polygon points="50,27 59,10 66,30" fill="white"/>
+                    <polygon points="17,28 21,14 27,27" fill="#f0e8f0"/>
+                    <polygon points="53,27 59,14 63,28" fill="#f0e8f0"/>
+                    <ellipse cx="40" cy="44" rx="27" ry="25" fill="white"/>
+                    <g id="frz-e0"><polyline points="24,39 28,43 24,47" fill="none" stroke="#2a2a2a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><polyline points="56,39 52,43 56,47" fill="none" stroke="#2a2a2a" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></g>
+                    <g id="frz-e1" style="opacity:0"><line x1="21" y1="43" x2="31" y2="43" stroke="#2a2a2a" stroke-width="2.8" stroke-linecap="round"/><line x1="49" y1="43" x2="59" y2="43" stroke="#2a2a2a" stroke-width="2.8" stroke-linecap="round"/></g>
+                    <g id="frz-e2" style="opacity:0"><path d="M21,45 Q26,38 31,45" fill="none" stroke="#2a2a2a" stroke-width="2.8" stroke-linecap="round"/><path d="M49,45 Q54,38 59,45" fill="none" stroke="#2a2a2a" stroke-width="2.8" stroke-linecap="round"/></g>
+                    <g id="frz-e3" style="opacity:0"><circle cx="26" cy="43" r="4.5" fill="#1a1a1a"/><circle cx="54" cy="43" r="4.5" fill="#1a1a1a"/><circle cx="27.8" cy="41" r="1.5" fill="white"/><circle cx="55.8" cy="41" r="1.5" fill="white"/></g>
+                    <ellipse cx="40" cy="51" rx="2.2" ry="1.5" fill="#e0b8c8"/>
+                    <path d="M34,54 Q37,58 40,55 Q43,58 46,54" fill="none" stroke="#e0b8c8" stroke-width="1.8" stroke-linecap="round"/>
+                    <ellipse cx="21" cy="54" rx="5.5" ry="3" fill="rgba(255,230,240,0.55)" style="animation:yyBlush 3s ease-in-out infinite"/>
+                    <ellipse cx="59" cy="54" rx="5.5" ry="3" fill="rgba(255,230,240,0.55)" style="animation:yyBlush 3s ease-in-out infinite"/>
+                    <line x1="6" y1="50" x2="28" y2="50" stroke="rgba(230,210,220,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+                    <line x1="6" y1="54" x2="28" y2="56" stroke="rgba(230,210,220,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+                    <line x1="52" y1="50" x2="74" y2="50" stroke="rgba(230,210,220,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+                    <line x1="52" y1="56" x2="74" y2="54" stroke="rgba(230,210,220,0.5)" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <!-- 说明卡片 -->
+            <div class="card" style="padding:10px 14px;">
+                <div style="font-size:10px;color:var(--tx3);line-height:1.6;text-align:center;">与监控脚本游戏列表同步 · 任意游戏启动自动冻结 · 退出后解冻</div>
+            </div>
+
+            <!-- 冻结应用列表 -->
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div style="font-weight:700;font-size:var(--fs-sm);">冻结的应用列表</div>
+                    <div style="font-size:10px;color:var(--tx3);">游戏运行时冻结，退出后解冻</div>
+                </div>
+                <div id="frz-pkg-list" style="display:flex;flex-direction:column;gap:7px;"></div>
+                <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+                    <input id="frz-new-pkg" type="text" placeholder="com.example.app"
+                        style="flex:1;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:9px 12px;color:var(--tx);font-size:12px;outline:none;-webkit-appearance:none;-webkit-user-select:text;user-select:text;"
+                        autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"
+                        onclick="this.focus()" ontouchstart="event.stopPropagation();this.focus();">
+                    <button class="btn" onclick="frzAddPkg()" style="white-space:nowrap;padding:9px 14px;flex-shrink:0;">添加</button>
+                </div>
+            </div>
+
+            <!-- 当前状态 -->
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div style="font-weight:700;font-size:var(--fs-sm);">冻结状态</div>
+                    <div style="display:flex;gap:6px;">
+                        <button onclick="frzForceUnfreeze()" style="background:rgba(255,100,100,.2);border:1px solid rgba(255,100,100,.3);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:#ff8080;cursor:pointer;">手动解冻</button>
+                        <button class="btn-sm" onclick="frzRefreshStatus()" style="background:rgba(255,255,255,.18);border:none;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:600;color:var(--tx);cursor:pointer;">刷新</button>
+                    </div>
+                </div>
+                <div id="frz-status" class="process-window" style="max-height:110px;font-size:10px;line-height:1.7;">加载中...</div>
+            </div>
+
+            <!-- 保存按钮 -->
+            <button class="btn" onclick="frzSave()" style="width:100%;padding:13px;font-size:var(--fs-sm);font-weight:700;background:linear-gradient(135deg,rgba(255,120,150,.3),rgba(255,180,200,.2));border:1px solid rgba(255,180,200,.3);">保存配置</button>
+
+            <!-- 诊断卡片 -->
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <div style="font-weight:700;font-size:var(--fs-sm);">系统诊断</div>
+                    <button onclick="frzRunDiag()" style="background:rgba(100,180,255,.2);border:1px solid rgba(100,180,255,.3);border-radius:20px;padding:3px 12px;font-size:10px;font-weight:600;color:#6cf;cursor:pointer;">运行诊断</button>
+                </div>
+                <div style="font-size:9px;color:var(--tx3);margin-bottom:6px;line-height:1.5;">检测冻结/后台守护/CPU伪装三个系统的真实状态，复制结果发给开发者可精准定位问题</div>
+                <div id="frz-diag" class="process-window" style="max-height:260px;font-size:9px;line-height:1.6;white-space:pre-wrap;">点击「运行诊断」开始</div>
+                <button onclick="frzCopyDiag()" style="width:100%;margin-top:8px;background:rgba(255,255,255,.15);border:none;border-radius:10px;padding:8px;font-size:11px;color:var(--tx);cursor:pointer;">复制诊断结果</button>
+            </div>
+            <div style="height:30px;"></div>
+        </div>
+    </div>
+    <!-- ===== 全局改机型 (独立页) ===== -->
+    <div id="page-models" class="page">
+        <div class="fm-topbar">
+            <button class="btn back-btn" onclick="switchPage('process')">← 返回</button>
+            <span class="fm-topbar-title">全局改机型</span>
+        </div>
+        <div class="card" style="padding:14px;">
+            <div style="font-size:12px;color:var(--tx2);line-height:1.6;margin-bottom:12px;">
+                打开开关立即伪装机型并申请重启使应用识别；关闭后重启恢复本机型。状态持久保存，重启自动重应用。
+            </div>
+            <div class="model-grid" id="model-list">
+                <!-- 机型卡由 JS 渲染 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 改机型 重启确认弹窗 ===== -->
+    <div id="model-reboot" class="fm-modal">
+        <div class="fm-confirm-card">
+            <div class="fm-confirm-title" id="model-reboot-title">是否重启？</div>
+            <div class="fm-confirm-sub" id="model-reboot-sub"></div>
+            <div class="fm-confirm-foot">
+                <button class="btn fm-confirm-cancel" id="model-reboot-later">稍后</button>
+                <button class="btn fm-confirm-ok" style="background:var(--ac);" id="model-reboot-now">立即重启</button>
+            </div>
+        </div>
+    </div>
 </div>
 
+    <!-- ===== 自定义游戏伪装 (CPU) 弹窗 ===== -->
+    <div id="cpuGamesModal" class="fm-modal">
+        <div class="fm-confirm-card" style="max-width:380px;text-align:left;background:rgba(225,240,255,0.78);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);border:1px solid rgba(255,255,255,0.65);color:#1b2436;">
+            <div style="font-size:16px;font-weight:800;color:#16213a;margin-bottom:2px;">自定义游戏伪装</div>
+            <div style="font-size:11px;color:#5a6b86;margin:6px 0 10px;line-height:1.5;">勾选的游戏在前台/后台运行时触发 CPU 伪装，未勾选的不监控。勾选即时生效。</div>
+            <div id="cpuGamesList" style="max-height:52vh;overflow-y:auto;"></div>
+            <div class="fm-confirm-foot" style="margin-top:14px;">
+                <button class="btn" style="background:rgba(80,140,235,0.92);color:#fff;border:none;" onclick="closeCpuGames()">完成</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 删除确认 (轻量弹窗) ===== -->
+    <div id="fm-confirm" class="fm-modal">
+        <div class="fm-confirm-card">
+            <div class="fm-confirm-title" id="fm-confirm-title">确认删除？</div>
+            <div class="fm-confirm-sub" id="fm-confirm-sub"></div>
+            <div class="fm-confirm-foot">
+                <button class="btn fm-confirm-cancel" id="fm-confirm-cancel">取消</button>
+                <button class="btn fm-confirm-ok" id="fm-confirm-ok">删除</button>
+            </div>
+        </div>
+    </div>
+
+
 <div class="floating-dock" id="dockBar">
-    <div class="dock-tab active" data-page="home"><div class="tab-icon">⌂</div><div class="tab-label">首页</div></div>
-    <div class="dock-tab" data-page="clean"><div class="tab-icon">⌧</div><div class="tab-label">清理</div></div>
+<div class="dock-tab active" data-page="home"><div class="tab-icon">⌂</div><div class="tab-label">首页</div></div>
     <div class="dock-tab" data-page="func"><div class="tab-icon">◉</div><div class="tab-label">功能</div></div>
     <div class="dock-tab" data-page="env"><div class="tab-icon">⌘</div><div class="tab-label">环境</div></div>
     <div class="dock-tab" data-page="process"><div class="tab-icon">⌲</div><div class="tab-label">进程</div></div>
+    <div class="dock-tab" data-page="clean"><div class="tab-icon">⌧</div><div class="tab-label">清理</div></div>
     <div class="dock-tab" data-page="settings"><div class="tab-icon">◩</div><div class="tab-label">设置</div></div>
     <div class="dock-tab" data-page="about"><div class="tab-icon">ℹ</div><div class="tab-label">关于</div></div>
 </div>
@@ -824,10 +1384,13 @@
 <script>
     function $(id){ return document.getElementById(id); }
     const pages = { 
-        home:$('page-home'), clean:$('page-clean'), func:$('page-func'), 
-        env:$('page-env'), process:$('page-process'), settings:$('page-settings'), 
-        about:$('page-about'), customicons:$('page-customicons'), log:$('page-log')
-    };
+        home:$('page-home'), clean:$('page-clean'), func:$('page-func'),
+env:$('page-env'), process:$('page-process'), settings:$('page-settings'),
+about:$('page-about'), customicons:$('page-customicons'), log:$('page-log'),
+models:$('page-models'),
+freeze:$('page-freeze'),
+jailbreak:$('page-jailbreak')
+};
     let currentPage = 'home';
 
     function refreshPageCardsAnimation(pageId) {
@@ -856,6 +1419,7 @@
         if(p === 'log') refreshLogFull();
         if(p === 'customicons') buildCustomIconsList();
         if(p === 'process') refreshProcessList();
+        if(window.__fmOnEnter) window.__fmOnEnter(p);
     }
 
     document.querySelectorAll('.dock-tab').forEach(t => t.addEventListener('click', (e) => {
@@ -863,6 +1427,48 @@
         tab.animate([{ transform: 'scale(0.9)' }, { transform: 'scale(1.1)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'ease-out' });
         switchPage(tab.dataset.page);
     }));
+
+    // ===== 键盘弹起时隐藏底栏(避免 fixed 底栏被顶起挡视野) =====
+    (function(){
+        const dock=document.getElementById('dockBar');
+        if(!dock) return;
+        const isInput=(el)=> el && (el.tagName==='INPUT'||el.tagName==='TEXTAREA');
+        document.addEventListener('focusin',(e)=>{ if(isInput(e.target)) dock.style.display='none'; });
+        document.addEventListener('focusout',()=>{ setTimeout(()=>{ if(!isInput(document.activeElement)) dock.style.display=''; },120); });
+    })();
+
+    // ===== 左右滑动切换页面 (仅限主 dock 页面) =====
+    (function(){
+        const order = ['home','func','env','process','clean','settings','about'];
+        let sx=0, sy=0, tracking=false;
+        const isInteractive = (el)=>{
+            // 在可横向滚动元素/输入/终端内不触发翻页
+            while(el && el!==document.body){
+                if(el.classList && (el.classList.contains('fm-list')||el.classList.contains('fm-quicknav')||
+                   el.classList.contains('fm-path')||el.id==='term-host'||el.classList.contains('fm-editor')||
+                   el.classList.contains('touch-rate-row')||el.tagName==='INPUT'||el.tagName==='TEXTAREA'||
+                   el.classList.contains('process-window'))) return true;
+                el=el.parentElement;
+            }
+            return false;
+        };
+        document.addEventListener('touchstart', (e)=>{
+            if(e.touches.length!==1){ tracking=false; return; }
+            if(isInteractive(e.target)){ tracking=false; return; }
+            // 仅在主页面之间滑动；文件管理子页用返回键
+            if(order.indexOf(currentPage)===-1){ tracking=false; return; }
+            sx=e.touches[0].clientX; sy=e.touches[0].clientY; tracking=true;
+        }, {passive:true});
+        document.addEventListener('touchend', (e)=>{
+            if(!tracking) return; tracking=false;
+            const dx=e.changedTouches[0].clientX-sx, dy=e.changedTouches[0].clientY-sy;
+            if(Math.abs(dx)<60 || Math.abs(dx)<Math.abs(dy)*1.5) return; // 需明显横向滑动
+            const i=order.indexOf(currentPage); if(i===-1) return;
+            const ni = dx<0 ? i+1 : i-1;
+            if(ni<0 || ni>=order.length) return;
+            switchPage(order[ni]);
+        }, {passive:true});
+    })();
 
     function updateStatusCard(on, gameName = '') {
         const card = $('statusCard');
@@ -905,12 +1511,12 @@
                 }
             }
             $('kernVer').textContent = shortKernel;
-            if ($('kernelShort')) $('kernelShort').textContent = shortKernel;
+            if ($('cpuModelShort')) $('cpuModelShort').textContent = (m.CPU_MODEL && m.CPU_MODEL!=='Unknown') ? m.CPU_MODEL : '--';
             $('cycleCount').textContent=m.CYCLE_COUNT;
             $('secPatch').textContent=m.SECURITY_PATCH||'--';
             $('fingerprint').textContent=m.FINGERPRINT;
             $('selinux').textContent=m.SELINUX;
-            $('moduleVer').textContent='v'+(m.MODULE_VERSION||'1.0');
+            $('moduleVer').textContent='v2.5';
         });
     }
 
@@ -922,7 +1528,7 @@
     }
     function clearLogFull(){ 
         if(confirm('清空日志？')) {
-            T('rm -f /data/local/tmp/xinmaskplus.log && touch /data/local/tmp/xinmaskplus.log').then(()=>{
+            T('rm -f /data/adb/xinmaskplus/log/xinmaskplus.log && touch /data/adb/xinmaskplus/log/xinmaskplus.log').then(()=>{
                 refreshLogFull();
             });
         }
@@ -997,7 +1603,6 @@
     }
 
     // ========== 基础开关（只操作标志文件，不写 feature_status.txt） ==========
-    async function toggleForceHide(){ let on=$('forceHideToggle').checked; await T(on?'touch /data/adb/modules/xinmaskplus/pid/force_hide':'rm -f /data/adb/modules/xinmaskplus/pid/force_hide'); updateRunningLeds(); }
     async function toggleNotifyAlways(){ let on=$('notifyAlwaysToggle').checked; await T(on?'touch /data/adb/modules/xinmaskplus/pid/notify_always':'rm -f /data/adb/modules/xinmaskplus/pid/notify_always'); updateRunningLeds(); }
     async function toggleAutoClean(){ let on=$('autoCleanToggle').checked; await T(on?'touch /data/adb/modules/xinmaskplus/pid/auto_clean':'rm -f /data/adb/modules/xinmaskplus/pid/auto_clean'); updateRunningLeds(); }
 
@@ -1012,17 +1617,16 @@
                 if (idx > 0) map[line.substring(0, idx).trim()] = line.substring(idx + 1).trim();
             });
             const switches = [
-                { id: 'forceHideToggle', flag: 'force_hide' },
                 { id: 'notifyAlwaysToggle', flag: 'notify_always' },
                 { id: 'autoCleanToggle', flag: 'auto_clean' },
-                { id: 'colorosLockToggle', flag: 'coloros_lock' },
                 { id: 'colorosSignalToggle', flag: 'coloros_signal' },
                 { id: 'unlockGmsToggle', flag: 'unlock_gms' },
                 { id: 'rkpToggle', flag: 'rkp' },
                 { id: 'soterToggle', flag: 'soter' },
                 { id: 'hideStorageToggle', flag: 'hide_storage' },
                 { id: 'autoUmountToggle', flag: 'auto_umount' },
-                { id: 'cpuSpoofToggle', flag: 'cpu_spoof' }
+                { id: 'cpuSpoofToggle', flag: 'cpu_spoof' },
+                { id: 'antiMarkToggle', flag: 'anti_mark' }
             ];
             for (const sw of switches) {
                 const configEnabled = (map[sw.flag] === '1');
@@ -1038,12 +1642,12 @@
             // 刷新 CPU 伪装窗口状态
             const cpuEl = document.getElementById('cpuSpoofToggle');
             if (cpuEl && cpuEl.checked) checkCpuSpoofStatus();
+            initCpuProfile();
         } catch (e) {}
     }
 
     function updateRunningLeds() {
         const ledMap = {
-            colorosLockToggle: 'led-colorosLock',
             colorosSignalToggle: 'led-colorosSignal',
             unlockGmsToggle: 'led-unlockGms',
             rkpToggle: 'led-rkp',
@@ -1066,18 +1670,6 @@
     }
 
     // ========== 功能开关 ==========
-    async function toggleColorOSLock() {
-        const on = document.getElementById('colorosLockToggle').checked;
-        if (on) {
-            await T('mkdir -p /data/adb/modules/xinmaskplus/pid && touch /data/adb/modules/xinmaskplus/pid/coloros_lock');
-            await T('sh /data/adb/modules/xinmaskplus/scripts/coloros_unlock.sh on');
-        } else {
-            await T('rm -f /data/adb/modules/xinmaskplus/pid/coloros_lock');
-            await T('sh /data/adb/modules/xinmaskplus/scripts/coloros_unlock.sh off');
-        }
-        updateRunningLeds();
-        refreshLogFull();
-    }
 
     async function toggleColorOSSignal() {
         const on = document.getElementById('colorosSignalToggle').checked;
@@ -1132,12 +1724,12 @@
         const tag = `[$(date +'%m-%d %H:%M:%S')] [HIDE_PRO]`;
         if (on) {
             await T('mkdir -p /data/adb/modules/xinmaskplus/pid && touch /data/adb/modules/xinmaskplus/pid/hide_storage');
-            await T(`echo "${tag} 用户开启 挂载空目录Pro监控" >> /data/local/tmp/xinmaskplus.log`);
+            await T(`echo "${tag} 用户开启 挂载空目录Pro监控" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
         } else {
             await T('rm -f /data/adb/modules/xinmaskplus/pid/hide_storage');
             // 关闭监控的同时，如有已隐藏项目立即还原
             await T('sh /data/adb/modules/xinmaskplus/scripts/hide_storage.sh off');
-            await T(`echo "${tag} 用户关闭 挂载空目录Pro监控" >> /data/local/tmp/xinmaskplus.log`);
+            await T(`echo "${tag} 用户关闭 挂载空目录Pro监控" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
         }
         updateRunningLeds();
         refreshLogFull();
@@ -1147,13 +1739,13 @@
         const on = document.getElementById('soterToggle').checked;
         const tag = `[$(date +'%m-%d %H:%M:%S')] [SOTER]`;
         if (on) {
-            await T(`echo "${tag} 用户开启 过春秋Tee环境不可信" >> /data/local/tmp/xinmaskplus.log`);
+            await T(`echo "${tag} 用户开启 过春秋Tee环境不可信" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
             await T('sh /data/adb/modules/xinmaskplus/scripts/fix_soter.sh on');
-            await T(`echo "${tag} sus路径写入完成" >> /data/local/tmp/xinmaskplus.log`);
+            await T(`echo "${tag} sus路径写入完成" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
         } else {
-            await T(`echo "${tag} 用户关闭 过春秋Tee环境不可信" >> /data/local/tmp/xinmaskplus.log`);
+            await T(`echo "${tag} 用户关闭 过春秋Tee环境不可信" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
             await T('sh /data/adb/modules/xinmaskplus/scripts/fix_soter.sh off');
-            await T(`echo "${tag} sus路径已移除" >> /data/local/tmp/xinmaskplus.log`);
+            await T(`echo "${tag} sus路径已移除" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
         }
         updateRunningLeds();
         refreshLogFull();
@@ -1172,21 +1764,101 @@
         refreshLogFull();
     }
 
+    const CPU_PROFS = ['9000','9000s','9020','9020a','xuanjie_o1','xuanjie_o3','9030pro','exynos2600','a17pro'];
+    const CPU_PROF_NAMES = {'9000':'麒麟9000','9000s':'麒麟9000S','9020':'麒麟9020','9020a':'麒麟9020A','xuanjie_o1':'玄戒O1','xuanjie_o3':'玄戒O3','9030pro':'麒麟9030Pro','exynos2600':'猎户座2600','a17pro':'A17 Pro'};
+
     async function toggleCpuSpoof() {
         const on = document.getElementById('cpuSpoofToggle').checked;
         const tag = "[$(date +'%m-%d %H:%M:%S')] [CpuSpoof]";
         if (on) {
+            const r = await T('cat /data/adb/modules/xinmaskplus/pid/cpu_profile 2>/dev/null');
+            let prof = (r.stdout||'').trim();
+            if (!CPU_PROFS.includes(prof)) { prof = '9000s'; await T('echo 9000s > /data/adb/modules/xinmaskplus/pid/cpu_profile'); }
             await T('touch /data/adb/modules/xinmaskplus/pid/cpu_spoof');
-            await T(`echo "${tag} 用户开启 CPU 信息伪装" >> /data/local/tmp/xinmaskplus.log`);
+            await T('sh /data/adb/modules/xinmaskplus/scripts/cpu_spoof.sh gpu-sync');
+            await T(`echo "${tag} 用户开启 CPU 信息伪装(${prof})" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
+            updateRunningLeds(); initCpuProfile(); checkCpuSpoofStatus();
+            toast('CPU伪装已开启 — 请在「自定义游戏伪装」勾选要监控的游戏');
         } else {
             await T('rm -f /data/adb/modules/xinmaskplus/pid/cpu_spoof');
-            await T(`echo "${tag} 用户关闭 CPU 信息伪装" >> /data/local/tmp/xinmaskplus.log`);
+            await T('sh /data/adb/modules/xinmaskplus/scripts/cpu_spoof.sh clear manual');
+            await T('sh /data/adb/modules/xinmaskplus/scripts/cpu_spoof.sh gpu-sync');
+            await T(`echo "${tag} 用户关闭 CPU 信息伪装" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
+            updateRunningLeds(); checkCpuSpoofStatus();
+        }
+    }
+
+    async function highlightCpuProfile(prof){
+        document.querySelectorAll('.cpuProfBtn').forEach(b=>{
+            const a = b.dataset.prof === prof;
+            b.style.background = a ? 'rgba(120,170,255,.55)' : 'rgba(255,255,255,.14)';
+            b.style.color = a ? '#fff' : 'var(--tx)';
+        });
+    }
+    async function initCpuProfile(){
+        const r = await T('cat /data/adb/modules/xinmaskplus/pid/cpu_profile 2>/dev/null');
+        let prof = (r.stdout||'').trim();
+        if (!CPU_PROFS.includes(prof)) prof = '9000s';
+        highlightCpuProfile(prof);
+    }
+    async function setCpuProfile(prof){
+        await T(`echo ${prof} > /data/adb/modules/xinmaskplus/pid/cpu_profile`);
+        highlightCpuProfile(prof);
+        const tag = "[$(date +'%m-%d %H:%M:%S')] [CpuSpoof]";
+        const wantGpu = confirm(`已选 ${CPU_PROF_NAMES[prof]||prof}\n是否顺带伪装 GPU 信息？\n（仅修改 ro.gpu.* 信息属性，需重启生效；选「取消」则不动 GPU）`);
+        if (wantGpu) { await T('touch /data/adb/modules/xinmaskplus/pid/gpu_spoof'); }
+        else { await T('rm -f /data/adb/modules/xinmaskplus/pid/gpu_spoof'); }
+        await T('sh /data/adb/modules/xinmaskplus/scripts/cpu_spoof.sh gpu-sync');
+        await T(`echo "${tag} 档位 -> ${prof}, GPU=${wantGpu?'on':'off'}" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
+        const cpuOn = document.getElementById('cpuSpoofToggle');
+        if (wantGpu && cpuOn && cpuOn.checked) {
+            if (confirm('GPU 属性需重启才能彻底生效\n是否立即重启？')) await T('reboot');
+        } else {
+            toast('已选 ' + (CPU_PROF_NAMES[prof]||prof) + (wantGpu?'（已开GPU，重启生效）':'（未伪装GPU）'));
+        }
+        checkCpuSpoofStatus();
+    }
+
+    // 自定义游戏伪装
+    async function openCpuGames(){ await buildCpuGamesList(); document.getElementById('cpuGamesModal').style.display='flex'; }
+    function closeCpuGames(){ document.getElementById('cpuGamesModal').style.display='none'; }
+    async function buildCpuGamesList(){
+        const r = await T('cat /data/adb/modules/xinmaskplus/pid/cpu_games.txt 2>/dev/null', 3000);
+        const sel = new Set((r.stdout||'').split('\n').map(s=>s.trim()).filter(Boolean));
+        let html = '';
+        games.forEach(g=>{
+            const checked = sel.has(g.pkg) ? 'checked' : '';
+            html += `<label style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(0,0,0,.08);cursor:pointer;">
+                <img src="${getGameIconSrc(g.pkg)}" onerror="this.style.visibility='hidden'" style="width:30px;height:30px;border-radius:7px;object-fit:cover;flex-shrink:0;background:rgba(0,0,0,.06);">
+                <span style="flex:1;font-size:13px;color:#1b2436;">${g.name}</span>
+                <input type="checkbox" class="cpuGameChk" data-pkg="${g.pkg}" ${checked} onchange="saveCpuGames()" style="width:18px;height:18px;accent-color:#3b82f6;">
+            </label>`;
+        });
+        document.getElementById('cpuGamesList').innerHTML = html;
+    }
+    async function saveCpuGames(){
+        const boxes = document.querySelectorAll('#cpuGamesList .cpuGameChk');
+        let content = '';
+        boxes.forEach(b=>{ if(b.checked) content += b.dataset.pkg + '\n'; });
+        const F = '/data/adb/modules/xinmaskplus/pid/cpu_games.txt';
+        const b64 = btoa(unescape(encodeURIComponent(content)));
+        await T('mkdir -p /data/adb/modules/xinmaskplus/pid && echo ' + b64 + ' | base64 -d > ' + F, 5000);
+        const tag = "[$(date +'%m-%d %H:%M:%S')] [CpuSpoof]";
+        await T(`echo "${tag} 更新自定义游戏列表" >> /data/adb/xinmaskplus/log/xinmaskplus.log`);
+    }
+
+
+    // 防标记开关(默认开; 关闭则不挂载隐藏空目录)
+    async function toggleAntiMark(){
+        const on = $('antiMarkToggle').checked;
+        if (on) {
+            await T('rm -f /data/adb/modules/xinmaskplus/pid/anti_mark_off');
+            toast('防标记已开启');
+        } else {
+            await T('touch /data/adb/modules/xinmaskplus/pid/anti_mark_off');
+            toast('防标记已关闭（游戏时不再挂载隐藏空目录）');
         }
         updateRunningLeds();
-        checkCpuSpoofStatus();
-        if (confirm('本功能需要重新启动才能生效\n是否立即重启？')) {
-            await T('reboot');
-        }
     }
 
     async function checkCpuSpoofStatus() {
@@ -1198,9 +1870,9 @@
         log.textContent = '检查中...';
         const mountRes = await T("mount | grep '/proc/cpuinfo'");
         const isMounted = mountRes.stdout.trim().length > 0;
-        const logRes = await T("grep '\\[CpuSpoof\\]\\|CPU.*伪装' /data/local/tmp/xinmaskplus.log 2>/dev/null | tail -6");
+        const logRes = await T("grep '\\[CpuSpoof\\]\\|CPU.*伪装' /data/adb/xinmaskplus/log/xinmaskplus.log 2>/dev/null | tail -6");
         const lines = [];
-        lines.push(isMounted ? '✓ /proc/cpuinfo 已挂载（伪装生效）' : '✗ /proc/cpuinfo 未挂载（重启后生效）');
+        lines.push(isMounted ? '✓ /proc/cpuinfo 已挂载（游戏中，伪装生效）' : '✗ /proc/cpuinfo 未挂载（进入游戏后自动挂载）');
         if (logRes.stdout.trim()) lines.push('', logRes.stdout.trim());
         log.textContent = lines.join('\n');
     }
@@ -1551,10 +2223,8 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
     window.pickBg = pickBg;
     window.resetBg = resetBg;
     window.updateBlur = updateBlur;
-    window.toggleForceHide = toggleForceHide;
     window.toggleNotifyAlways = toggleNotifyAlways;
     window.toggleAutoClean = toggleAutoClean;
-    window.toggleColorOSLock = toggleColorOSLock;
     window.toggleColorOSSignal = toggleColorOSSignal;
     window.toggleUnlockGms = toggleUnlockGms;
     window.toggleRKP = toggleRKP;
@@ -1851,7 +2521,7 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
         }
 
-        // render scheduler: RAF burst for a duration after a trigger
+        // render scheduler: 活动期间持续重绘(跟手不脱离)，静止后自动停(省电)
         let rafId = null, until = 0;
         function pump(){
             render();
@@ -1859,14 +2529,17 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
             else rafId = null;
         }
         function kick(ms){
-            until = performance.now() + (ms||1);
+            until = Math.max(until, performance.now() + (ms||500));
             if (!rafId) rafId = requestAnimationFrame(pump);
         }
 
-        // triggers
-        window.addEventListener('scroll', ()=>kick(120), { passive:true });
-        window.addEventListener('resize', ()=>kick(300));
-        document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') kick(60); });
+        // triggers: 滚动/触摸惯性 + CSS过渡动画 + 尺寸/可见性
+        ['scroll','touchstart','touchmove','touchend','wheel'].forEach(ev=>
+            window.addEventListener(ev, ()=>kick(500), { passive:true, capture:true }));
+        window.addEventListener('resize', ()=>kick(500));
+        window.addEventListener('transitionrun', ()=>kick(700), true);
+        window.addEventListener('animationstart', ()=>kick(900), true);
+        document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible') kick(200); });
 
         function setParams(cfg){
             lensConfig = Object.assign({}, DEFAULTS, cfg);
@@ -1907,79 +2580,1017 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
     window.updateLensParam = updateLensParam;
     window.resetLensParams = resetLensParams;
 
-    // ========== 云端公告 ==========
-    // 首选:main 分支 raw notice.txt(改公告不用发版)
-    // 兜底:模块自带 notice.txt(离线 / raw 拒连时)
-    const NOTICE_URL = 'https://raw.githubusercontent.com/kusesad-1122/Xmark-Tools/main/notice.txt';
-    const NOTICE_LOCAL = '/data/adb/modules/xinmaskplus/notice.txt';
-    const NOTICE_SEEN_KEY = 'xmark.notice.hash';
-
-    function _noticeHash(s) {
-        let h = 0;
-        for (let i = 0; i < s.length; i++) {
-            h = ((h << 5) - h) + s.charCodeAt(i);
-            h |= 0;
-        }
-        return String(h);
-    }
-
-    async function loadNotice(opts) {
-        opts = opts || {};
-        let content = null, source = 'remote';
-        try {
-            const resp = await fetch(NOTICE_URL + '?t=' + Date.now(), { cache: 'no-store' });
-            if (resp.ok) {
-                const t = (await resp.text()).trim();
-                if (t) content = t;
-            }
-        } catch (e) {}
-        if (!content) {
-            const r = await T('cat ' + NOTICE_LOCAL);
-            if (r && r.errno === 0 && r.stdout && r.stdout.trim()) {
-                content = r.stdout.trim();
-                source = 'local';
-            }
-        }
-        if (!content) return;
-        const h = _noticeHash(content);
-        if (opts.force || localStorage.getItem(NOTICE_SEEN_KEY) !== h) {
-            showNoticeModal(content, source);
-            localStorage.setItem(NOTICE_SEEN_KEY, h);
-        }
-    }
-
-    function showNoticeModal(content, source) {
-        const modal = $('noticeModal');
-        if (!modal) return;
-        $('noticeBody').textContent = content;
-        const badge = $('noticeSource');
-        if (badge) {
-            badge.textContent = source === 'remote' ? '云端' : '本地';
-            badge.classList.toggle('local', source !== 'remote');
-        }
-        modal.classList.add('show');
-    }
-
-    function closeNoticeModal() {
-        const modal = $('noticeModal');
-        if (modal) modal.classList.remove('show');
-    }
-
-    window.closeNoticeModal = closeNoticeModal;
-    window.openNoticeModal = function () { loadNotice({ force: true }); };
-    window.addEventListener('load', () => setTimeout(() => loadNotice(), 600));
-
 </script>
 
-<div id="noticeModal" class="notice-modal" onclick="if(event.target===this)closeNoticeModal()">
-    <div class="notice-card">
-        <div class="notice-header">
-            <span class="notice-title">Xmark-Tools 公告</span>
-            <span class="notice-badge" id="noticeSource">云端</span>
-            <button class="notice-close" onclick="closeNoticeModal()" aria-label="关闭">×</button>
-        </div>
-        <pre class="notice-body" id="noticeBody"></pre>
+<script>
+    // ================= 文件管理 / 终端 模块 (独立页导航) =================
+    (function(){
+        const MOD = '/data/adb/modules/xinmaskplus';
+        // 优先用手动设的首页，其次上次路径，最后才是模块目录，杂鱼别嫌烦啦喵
+        let curDir = (() => {
+            try {
+                const home = localStorage.getItem('xinmask_fm_home');
+                if(home && home.startsWith('/')) return home;
+                const saved = localStorage.getItem('xinmask_fm_lastPath');
+                if(saved && saved.startsWith('/')) return saved;
+            } catch(e) {}
+            return MOD;
+        })();
+        let term = null, fitAddon = null, termReady = false;
+        const history = []; let histIdx = -1;
+        let propTarget = null;     // {path,name,isDir}
+        let editReturn = 'fileprop', termReturn = 'fileprop';
+
+        function q(s){ return "'" + String(s).replace(/'/g, "'\\''") + "'"; }
+        function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+        // ---------- 路径工具 ----------
+        function joinPath(dir, name){
+            if(name==='..') return parentOf(dir);
+            if(dir==='/') return '/'+name;
+            return dir.replace(/\/$/,'') + '/' + name;
+        }
+        function parentOf(dir){
+            if(dir==='/'||!dir) return '/';
+            const p = dir.replace(/\/$/,'').split('/'); p.pop();
+            return p.join('/') || '/';
+        }
+        function goUp(){ listDir(parentOf(curDir)); }
+        function syncPath(){ const e=document.getElementById('fm-path'); if(e) e.textContent = curDir; }
+
+        // ---------- 搜索: 路径跳转 或 文件名查找 ----------
+        async function doSearch(){
+            const inp=document.getElementById('fm-search');
+            const kw=inp.value.trim();
+            if(!kw){ listDir(curDir); return; }
+            const list=document.getElementById('fm-list');
+            // 以 / 开头 → 当作路径直接跳转
+            if(kw.startsWith('/')){
+                const chk=await T('[ -d '+q(kw)+' ] && echo D || ([ -e '+q(kw)+' ] && echo F || echo N)');
+                const t=chk.stdout.trim();
+                if(t==='D'){ inp.value=''; listDir(kw); return; }
+                if(t==='F'){ inp.value=''; openProp(kw, kw.split('/').pop(), false); return; }
+                toast('路径不存在', true); return;
+            }
+            // 否则在当前目录递归查找文件名
+            list.innerHTML='<div class="fm-empty">搜索中…</div>';
+            const r=await T('find '+q(curDir)+' -iname '+q('*'+kw+'*')+' 2>/dev/null | head -200', 30000);
+            const paths=r.stdout.split('\n').map(s=>s.trim()).filter(s=>s && s!==curDir);
+            if(!paths.length){ list.innerHTML='<div class="fm-empty">未找到匹配项</div>'; return; }
+            list.innerHTML='';
+            const head=document.createElement('div');
+            head.className='fm-empty'; head.style.cssText='padding:8px;color:var(--tx2);font-size:11px;';
+            head.textContent='搜索结果 ('+paths.length+')，点击打开';
+            list.appendChild(head);
+            for(const full of paths){
+                const r2=await T('[ -d '+q(full)+' ] && echo D || echo F');
+                const isDir=r2.stdout.trim()==='D';
+                const row=document.createElement('div'); row.className='fm-row';
+                row.innerHTML='<span class="fm-ico '+(isDir?'dir':'')+'">'+(isDir?'📁':'📄')+'</span>'+
+                    '<div class="fm-meta"><div class="fm-name">'+escapeHtml(full.split('/').pop())+'</div>'+
+                    '<div class="fm-detail">'+escapeHtml(full)+'</div></div>';
+                row.addEventListener('click', ()=>{
+                    if(isDir){ document.getElementById('fm-search').value=''; listDir(full); }
+                    else openProp(full, full.split('/').pop(), false);
+                });
+                list.appendChild(row);
+            }
+        }
+
+        // ---------- 文件列表 ----------
+        async function listDir(dir){
+            curDir = dir; syncPath();
+            // 杂鱼，你的位置我给你记住了呢喵
+            try { localStorage.setItem('xinmask_fm_lastPath', dir); } catch(e) {}
+            const list = document.getElementById('fm-list');
+            list.innerHTML = '<div class="fm-empty">加载中...</div>';
+            const r = await T('ls -la ' + q(dir) + ' 2>&1');
+            if(r.errno!==0){ list.innerHTML = '<div class="fm-empty" style="color:#ff6b6b">无法访问: '+escapeHtml(r.stderr||r.stdout)+'</div>'; return; }
+            const rows = [];
+            for(const line of r.stdout.split('\n')){
+                if(!line.trim() || /^total/i.test(line)) continue;
+                const p = parseLsLine(line);
+                if(!p || p.name==='.') continue;
+                rows.push(p);
+            }
+            rows.sort((a,b)=>{
+                if(a.name==='..') return -1; if(b.name==='..') return 1;
+                if(a.isDir!==b.isDir) return a.isDir?-1:1;
+                return a.name.localeCompare(b.name);
+            });
+            if(!rows.length){ list.innerHTML = '<div class="fm-empty">空目录</div>'; return; }
+            list.innerHTML = '';
+            for(const f of rows){
+                const row = document.createElement('div');
+                row.className = 'fm-row';
+                let ico='📄', cls='';
+                if(f.isDir){ ico='📁'; cls='dir'; }
+                else if(f.isLink){ ico='🔗'; cls='lnk'; }
+                else if(f.exec){ ico='⚙️'; cls='exe'; }
+                const full = joinPath(dir, f.name);
+                row.innerHTML =
+                    '<span class="fm-ico '+cls+'">'+ico+'</span>'+
+                    '<div class="fm-meta"><div class="fm-name">'+escapeHtml(f.name)+'</div>'+
+                    '<div class="fm-detail">'+escapeHtml(f.size||'')+(f.size?'  ':'')+escapeHtml(f.date||'')+'</div></div>'+
+                    '<span class="fm-perm-tag">'+escapeHtml(f.perm)+'</span>';
+                row.addEventListener('click', ()=>{
+                    if(f.name==='..'){ goUp(); return; }
+                    if(f.isDir){ listDir(full); }
+                    else { openProp(full, f.name, false); }   // 点文件 → 属性页
+                });
+                list.appendChild(row);
+            }
+        }
+
+        function parseLsLine(line){
+            let m = line.match(/^([dlcbsp\-][rwxsStT\-]{9})\s+\d+\s+\S+\s+\S+\s+(\d+)\s+(\d{4}-\d{2}-\d{2}\s+[\d:]+|\w{3}\s+\d+\s+[\d:]{4,5}|\w{3}\s+\d+\s+\d{4})\s+(\S.*)$/);
+            if(m){
+                let name = m[4].replace(/ -> .*$/,'').trim();
+                return { perm:m[1], size:m[2], date:m[3].trim(), name,
+                    isDir:m[1][0]==='d', isLink:m[1][0]==='l', exec:/x/.test(m[1].slice(1)) };
+            }
+            let m2 = line.match(/^([dlcbsp\-][rwxsStT\-]{9})\s+(.+)$/);
+            if(!m2) return null;
+            let rest = m2[2].trim().split(/\s+/);
+            let name = rest.length>6 ? rest.slice(6).join(' ') : rest[rest.length-1];
+            name = name.replace(/ -> .*$/,'').trim();
+            return { perm:m2[1], name, size:rest[3]||'', date:'',
+                isDir:m2[1][0]==='d', isLink:m2[1][0]==='l', exec:/x/.test(m2[1].slice(1)) };
+        }
+
+        // ---------- 属性 / 权限 (独立页) ----------
+        const PERM_BITS = [['u','所有者'],['g','所属组'],['o','其他人']];
+        async function openProp(full, name, isDir){
+            propTarget = {path:full, name, isDir};
+            switchPage('fileprop');
+            document.getElementById('fm-prop-name').textContent = full;
+            document.getElementById('fm-prop-info').textContent = '加载中...';
+            buildPermGrid();
+            document.getElementById('fm-prop-exec').style.display = isDir ? 'none' : '';
+            document.getElementById('fm-prop-edit').style.display = isDir ? 'none' : '';
+            const r = await T('stat ' + q(full) + ' 2>/dev/null || ls -la ' + q(full));
+            document.getElementById('fm-prop-info').textContent = (r.stdout.trim() || r.stderr);
+            const oc = await T("stat -c '%a' " + q(full) + " 2>/dev/null");
+            let octal = oc.stdout.trim();
+            if(!/^[0-7]{3,4}$/.test(octal)){
+                const lr = await T('ls -ld ' + q(full));
+                const pm = (lr.stdout.match(/^([dlcbsp\-][rwxsStT\-]{9})/)||[])[1];
+                octal = pm ? permToOctal(pm) : '644';
+            }
+            document.getElementById('fm-octal').value = octal;
+            setGridFromOctal(octal);
+        }
+        function permToOctal(pm){
+            const s=pm.slice(1); let o='';
+            for(let i=0;i<9;i+=3){ let n=0; if(s[i]==='r')n+=4; if(s[i+1]==='w')n+=2; if(/[xsSt]/.test(s[i+2]))n+=1; o+=n; }
+            return o;
+        }
+        function buildPermGrid(){
+            const grid=document.getElementById('fm-perm-grid'); grid.innerHTML='';
+            PERM_BITS.forEach(([key,label])=>{
+                const col=document.createElement('div'); col.className='fm-perm-col';
+                col.innerHTML='<h5>'+label+'</h5>';
+                ['读 (r)','写 (w)','执行 (x)'].forEach((b,bi)=>{
+                    const lab=document.createElement('label'); lab.className='fm-perm-check';
+                    lab.innerHTML='<input type="checkbox" id="perm-'+key+'-'+bi+'">'+b;
+                    lab.querySelector('input').addEventListener('change', gridToOctal);
+                    col.appendChild(lab);
+                });
+                grid.appendChild(col);
+            });
+        }
+        function setGridFromOctal(octal){
+            const o = octal.length===4 ? octal.slice(1) : octal;
+            ['u','g','o'].forEach((k,i)=>{
+                const d=parseInt(o[i]||'0',8);
+                document.getElementById('perm-'+k+'-0').checked=!!(d&4);
+                document.getElementById('perm-'+k+'-1').checked=!!(d&2);
+                document.getElementById('perm-'+k+'-2').checked=!!(d&1);
+            });
+        }
+        function gridToOctal(){
+            let o='';
+            ['u','g','o'].forEach(k=>{ let n=0;
+                if(document.getElementById('perm-'+k+'-0').checked)n+=4;
+                if(document.getElementById('perm-'+k+'-1').checked)n+=2;
+                if(document.getElementById('perm-'+k+'-2').checked)n+=1; o+=n; });
+            document.getElementById('fm-octal').value=o;
+        }
+        async function applyPerm(){
+            if(!propTarget) return;
+            let oc=document.getElementById('fm-octal').value.trim();
+            if(!/^[0-7]{3,4}$/.test(oc)){ toast('八进制权限格式错误',true); return; }
+            const r=await T('chmod '+oc+' '+q(propTarget.path)+' 2>&1');
+            toast(r.errno===0 ? '权限已应用: '+oc : '失败: '+(r.stderr||r.stdout), r.errno!==0);
+        }
+
+        // ---------- 编辑 (独立页) ----------
+        async function openEditor(){
+            if(!propTarget) return;
+            editReturn = 'fileprop';
+            switchPage('fileedit');
+            document.getElementById('fm-edit-sub').textContent = propTarget.path;
+            const ed=document.getElementById('fm-editor');
+            ed.value='加载中...'; ed.dataset.path=propTarget.path;
+            const bin=await T('LC_ALL=C grep -qI . '+q(propTarget.path)+' 2>/dev/null; echo $?');
+            if(bin.stdout.trim()!=='0'){
+                ed.value='[二进制文件，不可文本编辑]\n\n返回属性页可直接执行或修改权限。';
+                ed.readOnly=true; document.getElementById('fm-edit-save').style.display='none'; return;
+            }
+            ed.readOnly=false; document.getElementById('fm-edit-save').style.display='';
+            const r=await T('cat '+q(propTarget.path)+' 2>&1', 30000);
+            ed.value = r.errno===0 ? r.stdout : ('读取失败:\n'+r.stderr);
+        }
+        async function saveEditor(){
+            const ed=document.getElementById('fm-editor');
+            const b64=btoa(unescape(encodeURIComponent(ed.value)));
+            const r=await T('echo '+q(b64)+' | base64 -d > '+q(ed.dataset.path)+' 2>&1');
+            if(r.errno===0){ toast('已保存'); switchPage('fileprop'); }
+            else toast('保存失败: '+(r.stderr||r.stdout), true);
+        }
+
+        // ---------- 终端 (独立页) ----------
+        let termBuf='';
+        function tw(s){ if(term){ term.write(s); try{ term.scrollToBottom(); }catch(e){} } termBuf += String(s).replace(/\x1b\[[0-9;]*m/g,'').replace(/\r/g,''); }
+        function twln(s){ tw((s||'')+'\r\n'); }
+        function initTerm(){
+            if(termReady){ if(fitAddon) try{fitAddon.fit();}catch(e){} return; }
+            if(typeof Terminal==='undefined'){
+                document.getElementById('term-host').innerHTML='<div style="color:#f66;font-family:monospace;font-size:12px;padding:8px">xterm.js 未加载</div>'; return;
+            }
+            term=new Terminal({ fontSize:12, fontFamily:'monospace', cursorBlink:true, convertEol:true, scrollback:8000,
+                disableStdin:true,           // 不抢输入，避免点一下就弹键盘；输入走下方输入框
+                theme:{ background:'#0c0c10', foreground:'#e6e6e6', cursor:'#34c759' } });
+            try{ if(typeof FitAddon!=='undefined'){ fitAddon=new (FitAddon.FitAddon||FitAddon)(); term.loadAddon(fitAddon); } }catch(e){}
+            term.open(document.getElementById('term-host'));
+            try{ if(fitAddon) fitAddon.fit(); }catch(e){}
+            // 移除隐藏 textarea 的可聚焦性，点击终端只选择文本不弹键盘
+            try{ if(term.textarea){ term.textarea.readOnly=true; term.textarea.setAttribute('inputmode','none'); term.textarea.tabIndex=-1; } }catch(e){}
+            termReady=true;
+            termBuf='';
+            tw('\x1b[32m苦涩or苳季环境助手 · 网页终端\x1b[0m\r\n');
+            tw('\x1b[90m以 root 身份运行 · 当前: '+curDir+'\x1b[0m\r\n');
+            tw(prompt());
+        }
+        function prompt(){ return '\x1b[32m# \x1b[0m'; }
+        // ===== 交互式执行状态 (FIFO 喂 stdin) =====
+        let execBusy=false;
+        let attach=null;   // {fifo,log,keeperPid,procPid,shown,timer,done}
+        const FIFO='/data/local/tmp/xmp_in';
+        const ELOG='/data/local/tmp/xmp_exec.log';
+        const DONE='___XMP_DONE___';
+        // 常驻守护协议文件
+        const TRIGGER='/data/local/tmp/xmp_exec_trigger';
+        const PROCPID='/data/local/tmp/xmp_proc.pid';
+        const KEEPERPID='/data/local/tmp/xmp_keeper.pid';
+        const HEARTBEAT='/data/local/tmp/xmp_daemon_alive';
+        const xmpSleep=(ms)=>new Promise(r=>setTimeout(r,ms));
+
+        async function runCmd(cmd){
+            cmd=cmd.trim();
+            // 若有进程正在等待输入 → 把内容喂给它，而不是当命令跑
+            if(attach && !attach.done){
+                tw('\x1b[36m'+cmd+'\x1b[0m\r\n');
+                await T('printf "%s\\n" '+q(cmd)+' > '+FIFO+' 2>/dev/null &', 8000);
+                return;
+            }
+            if(!cmd){ tw(prompt()); return; }
+            tw('\x1b[36m# '+cmd+'\x1b[0m\r\n');
+            history.push(cmd); histIdx=history.length;
+            if(cmd==='cd'||cmd.startsWith('cd ')){
+                const arg=cmd.length>2?cmd.slice(3).trim():MOD;
+                const r=await T('cd '+q(curDir)+' && cd '+q(arg)+' && pwd');
+                if(r.errno===0 && r.stdout.trim()){ curDir=r.stdout.trim(); syncPath(); }
+                else tw('\x1b[31m'+(r.stderr||'目录不存在')+'\x1b[0m\r\n');
+                tw(prompt()); return;
+            }
+            const r=await T('cd '+q(curDir)+' 2>/dev/null; timeout 30 sh -c '+q(cmd)+' </dev/null 2>&1', 35000);
+            if(r.stdout) tw(r.stdout.replace(/\n/g,'\r\n'));
+            if(r.stdout && !r.stdout.endsWith('\n')) tw('\r\n');
+            if(r.errno===-1 && r.stderr==='timeout') tw('\x1b[33m[命令超时已中断(30s)。常驻进程请在命令末尾加 & 后台运行]\x1b[0m\r\n');
+            else if(r.errno!==0 && !r.stdout) tw('\x1b[31m[退出码 '+r.errno+'] '+(r.stderr||'')+'\x1b[0m\r\n');
+            tw(prompt());
+        }
+
+        // 清理正在挂接的进程
+        async function detachProc(kill){
+            if(!attach) return;
+            if(attach.timer){ clearInterval(attach.timer); attach.timer=null; }
+            const a=attach; attach=null;
+            if(a.watcher){
+                // 常驻模式：PID 由守护写入文件，从文件读取后终止
+                if(kill){
+                    await T('P=$(cat '+PROCPID+' 2>/dev/null); K=$(cat '+KEEPERPID+' 2>/dev/null); [ -n "$P" ] && sh /data/adb/modules/xinmaskplus/scripts/term_kill.sh tree "$P"; [ -n "$K" ] && kill $K 2>/dev/null', 10000);
+                }else{
+                    await T('K=$(cat '+KEEPERPID+' 2>/dev/null); [ -n "$K" ] && kill $K 2>/dev/null', 8000);
+                }
+            }else{
+                // 直接模式：PID 在本地变量
+                if(kill){
+                    await T('sh /data/adb/modules/xinmaskplus/scripts/term_kill.sh tree '+a.procPid+' 2>/dev/null; kill '+a.keeperPid+' 2>/dev/null', 10000);
+                }else{
+                    await T('kill '+a.keeperPid+' 2>/dev/null', 8000);
+                }
+            }
+            setTermPlaceholder(false);
+        }
+        function setTermPlaceholder(interactive){
+            const ci=document.getElementById('term-cmd');
+            if(ci) ci.placeholder = interactive ? '程序运行中，输入内容回车发送给它…' : '输入命令后回车执行…';
+        }
+
+        const GOTERM_PORT=21119;
+        const MODDIR='/data/adb/modules/xinmaskplus';
+
+        async function launchGoterm(binPath){
+            const binName=binPath.split('/').pop();
+            await T('printf %s '+q(binPath)+' > /data/local/tmp/xmp_term_current 2>/dev/null',3000);
+            const check=await T('curl -s --max-time 1 http://127.0.0.1:'+GOTERM_PORT+'/health 2>/dev/null || echo NOCONN',4000);
+            let alive=((check.stdout||'').trim()==='ok');
+            if(!alive){
+                toast(`✓ 准备启动《${binName}》终端环境…`, false);
+                await T('chmod 0755 '+MODDIR+'/bin/goterm 2>/dev/null; pkill -f "bin/goterm" 2>/dev/null; sleep 0.2; setsid '+MODDIR+'/bin/goterm '+GOTERM_PORT+' '+MODDIR+' </dev/null >/data/adb/xinmaskplus/log/goterm.log 2>&1 &',5000);
+                for(let i=0;i<8;i++){
+                    await new Promise(r=>setTimeout(r,350));
+                    const c=await T('curl -s --max-time 1 http://127.0.0.1:'+GOTERM_PORT+'/health 2>/dev/null',3000);
+                    if((c.stdout||'').trim()==='ok'){alive=true;break;}
+                }
+                if(!alive){toast('⚠ 终端启动超时，请重试或重启设备',true);return;}
+            }
+            // 检测tmux：先复制到/data/local/tmp(shell可执行处)再测试
+            const tmuxChk=await T('B=/data/local/tmp/xmptmux; mkdir -p $B; cp '+MODDIR+'/bin/tmux '+MODDIR+'/bin/*.so* $B/ 2>/dev/null; chmod 0755 $B/* 2>/dev/null; LD_LIBRARY_PATH=$B $B/tmux -V 2>/dev/null | head -1 || echo NO',6000);
+            const hasTmux=/tmux/i.test(tmuxChk.stdout||'');
+            let url;
+            if(hasTmux){
+                await T('printf %s '+q(binPath)+' > /data/local/tmp/xmp_tmux_target; chmod 0755 '+MODDIR+'/scripts/tmrun.sh '+MODDIR+'/bin/tmux 2>/dev/null',3000);
+                url='http://127.0.0.1:'+GOTERM_PORT+'/?bin='+encodeURIComponent(MODDIR+'/scripts/tmrun.sh')+'#name='+encodeURIComponent(binName);
+            } else {
+                url='http://127.0.0.1:'+GOTERM_PORT+'/?bin='+encodeURIComponent(binPath);
+            }
+            await T('am start -a android.intent.action.VIEW -d '+q(url)+' 2>/dev/null',5000);
+            toast(hasTmux?`🚀 《${binName}》已在保活会话启动 — 关终端不会中断`:`🚀 《${binName}》已启动 — 切换到浏览器查看`);
+        }
+
+        async function execTargetBg(){
+            if(!propTarget) return;
+            const p=propTarget.path;
+            const binName=p.split('/').pop();
+            const logFile='/data/local/tmp/xinmask_bg_'+binName+'.log';
+            // 标记为后台目标：终端「结束」不会误杀它
+            await T('touch /data/local/tmp/xmp_bg_targets 2>/dev/null; grep -qxF '+q(p)+' /data/local/tmp/xmp_bg_targets 2>/dev/null || echo '+q(p)+' >> /data/local/tmp/xmp_bg_targets',5000);
+            // 赋权 + setsid后台执行，完全脱离PTY，进程在关闭终端后保活
+            await T('chmod 775 '+q(p)+' 2>/dev/null; setsid '+q(p)+' </dev/null >'+q(logFile)+' 2>&1 &',8000);
+            toast('《'+binName+'》已在后台启动，日志: '+logFile);
+        }
+
+        async function execTarget(){
+            if(!propTarget) return;
+            if(execBusy){ toast('已有任务在执行中', true); return; }
+            if(attach && !attach.done){ await detachProc(true); }
+            execBusy=true;
+            termReturn='fileprop';
+            const p=propTarget.path;
+            try{
+                // 检测是否为ELF二进制（读文件头魔数 \x7fELF）
+                const magic=await T('dd if='+q(p)+' bs=4 count=1 2>/dev/null | xxd -p 2>/dev/null || od -A n -N 4 -t x1 '+q(p)+' 2>/dev/null',5000);
+                const hex=(magic.stdout||'').replace(/\s/g,'').toLowerCase();
+                const isElf=hex.startsWith('7f454c46');
+                if(isElf){
+                    // ELF二进制 → 赋权 → 走goterm PTY终端
+                    await T('chmod 775 '+q(p)+' 2>/dev/null',5000);
+                    execBusy=false;
+                    await launchGoterm(p);
+                    return;
+                }
+                // 非ELF → 走原有逻辑
+                switchPage('fileterm'); initTerm();
+                if(term) term.clear(); termBuf='';
+                tw('\x1b[33m▶ 执行: '+p+'\x1b[0m\r\n');
+                await T('chmod +x '+q(p)+' 2>/dev/null', 8000);
+                // 检测常驻守护是否在运行（心跳文件 30s 内更新过）
+                const hb=await T('[ -f '+HEARTBEAT+' ] && [ $(( $(date +%s) - $(stat -c %Y '+HEARTBEAT+' 2>/dev/null || echo 0) )) -le 30 ] && echo Y || echo N', 8000);
+                const daemonAlive = (hb.stdout.trim()==='Y');
+                let useWatcher=false;
+                if(daemonAlive){
+                    // 投递给常驻守护执行：脚本进程归 ksud，划掉管理器不掉
+                    await T('rm -f '+ELOG+' '+PROCPID+' '+KEEPERPID+'; echo '+q(p)+' > '+TRIGGER, 8000);
+                    // 等守护接管（trigger 被消费即视为接管），最多 ~3s
+                    for(let i=0;i<6;i++){
+                        await xmpSleep(500);
+                        const c=await T('[ -f '+TRIGGER+' ] && echo Y || echo N', 5000);
+                        if(c.stdout.trim()==='N'){ useWatcher=true; break; }
+                    }
+                }
+                if(useWatcher){
+                    tw('\x1b[90m[常驻执行 · 已脱离管理器，划掉不影响]\x1b[0m\r\n');
+                    attach={ fifo:FIFO, log:ELOG, watcher:true, shown:0, done:false, timer:null };
+                }else{
+                    // 回退：守护未运行（通常是安装后未重启），用直接 fork
+                    tw('\x1b[90m[直接执行 · 重启后可常驻]\x1b[0m\r\n');
+                    await T('rm -f '+TRIGGER+' '+FIFO+' '+ELOG+'; mkfifo '+FIFO+' 2>/dev/null; : > '+ELOG, 8000);
+                    const kp=await T('setsid sh -c '+q('exec 3>'+FIFO+'; sleep 2147483647')+' </dev/null >/dev/null 2>&1 & echo $!', 8000);
+                    const keeperPid=(kp.stdout.trim().match(/\d+/)||['0'])[0];
+                    const scriptDir = p.substring(0, p.lastIndexOf('/')) || '/';
+                    const inner='export PATH=/system/bin:/system/xbin:/data/local/tmp:$PATH; cd '+q(scriptDir)+' && timeout 600 '+q(p)+' < '+FIFO+' >> '+ELOG+' 2>&1; echo "'+DONE+' $?" >> '+ELOG;
+                    const pp=await T('setsid sh -c '+q(inner)+' </dev/null >/dev/null 2>&1 & echo $!', 8000);
+                    const procPid=(pp.stdout.trim().match(/\d+/)||['0'])[0];
+                    attach={ fifo:FIFO, log:ELOG, watcher:false, keeperPid, procPid, shown:0, done:false, timer:null };
+                }
+                setTermPlaceholder(true);
+                // 轮询输出（两种模式共用，都读 ELOG）
+                attach.timer=setInterval(async ()=>{
+                    if(!attach) return;
+                    const r=await T('cat '+ELOG+' 2>/dev/null', 8000);
+                    let out=r.stdout||'';
+                    let end=out.indexOf(DONE);
+                    let finished=end!==-1;
+                    if(finished) out=out.slice(0,end);
+                    if(out.length>attach.shown){ tw(out.slice(attach.shown).replace(/\n/g,'\r\n')); attach.shown=out.length; }
+                    if(finished){
+                        attach.done=true;
+                        const m=(r.stdout.match(new RegExp(DONE+' (\\d+)'))||[])[1];
+                        twln('\x1b[90m[退出码 '+(m!==undefined?m:'?')+']\x1b[0m');
+                        tw(prompt());
+                        await detachProc(false);
+                    }
+                }, 600);
+            }catch(e){
+                twln('\x1b[31m[执行异常: '+e+']\x1b[0m'); tw(prompt());
+                await detachProc(true);
+            }finally{
+                execBusy=false;
+            }
+        }
+
+        // ---------- 重命名 / 删除 ----------
+        async function renameTarget(){
+            if(!propTarget) return;
+            const nn=window.prompt('新名称', propTarget.name);
+            if(!nn || nn===propTarget.name) return;
+            const np=joinPath(parentOf(propTarget.path), nn);
+            const r=await T('mv '+q(propTarget.path)+' '+q(np)+' 2>&1');
+            if(r.errno===0){ toast('已重命名'); listDir(parentOf(propTarget.path)); switchPage('files'); }
+            else toast('失败: '+(r.stderr||r.stdout), true);
+        }
+        function askDelete(){
+            if(!propTarget) return;
+            document.getElementById('fm-confirm-sub').textContent=propTarget.path;
+            document.getElementById('fm-confirm').classList.add('open');
+        }
+        async function doDelete(){
+            document.getElementById('fm-confirm').classList.remove('open');
+            if(!propTarget) return;
+            const parent=parentOf(propTarget.path);
+            const r=await T('rm -rf '+q(propTarget.path)+' 2>&1');
+            if(r.errno===0){ toast('已删除'); listDir(parent); switchPage('files'); }
+            else toast('失败: '+(r.stderr||r.stdout), true);
+        }
+
+        // ---------- toast ----------
+        let toastTimer=null;
+        function toast(msg, err){
+            let el=document.getElementById('__fmtoast');
+            if(!el){ el=document.createElement('div'); el.id='__fmtoast';
+                el.style.cssText='position:fixed;left:50%;bottom:130px;transform:translateX(-50%);z-index:999;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:600;color:#fff;backdrop-filter:blur(8px);box-shadow:0 6px 24px rgba(0,0,0,.3);max-width:80vw;text-align:center;';
+                document.body.appendChild(el); }
+            el.style.background = err ? 'rgba(255,59,48,.9)' : 'rgba(52,199,89,.9)';
+            el.textContent=msg; el.style.opacity='1';
+            clearTimeout(toastTimer);
+            toastTimer=setTimeout(()=>{ el.style.transition='opacity .4s'; el.style.opacity='0'; }, 2200);
+        }
+
+        // ---------- 绑定 ----------
+        function bind(){
+            const on=(id,fn)=>{ const e=document.getElementById(id); if(e) e.addEventListener('click',fn); };
+            on('fm-up', goUp);
+            on('fm-refresh', ()=>listDir(curDir));
+            on('fm-sethome', ()=>{
+                try {
+                    localStorage.setItem('xinmask_fm_home', curDir);
+                    toast('✓ 已将《'+curDir+'》设为首页啦喵');
+                } catch(e) { toast('设置失败了呢，杂鱼',true); }
+            });
+            on('fm-search-btn', doSearch);
+            const sb=document.getElementById('fm-search');
+            if(sb) sb.addEventListener('keydown',(e)=>{ if(e.key==='Enter') doSearch(); });
+            document.querySelectorAll('.fm-chip').forEach(c=>c.addEventListener('click', ()=>listDir(c.dataset.path)));
+            on('fm-apply-perm', applyPerm);
+            const oct=document.getElementById('fm-octal');
+            if(oct) oct.addEventListener('input', ()=>{ const v=oct.value.trim(); if(/^[0-7]{3,4}$/.test(v)) setGridFromOctal(v); });
+            on('fm-prop-edit', openEditor);
+            on('fm-prop-exec', execTarget);
+            on('fm-prop-exec-bg', execTargetBg);
+            on('fm-prop-rename', renameTarget);
+            on('fm-prop-del', askDelete);
+            on('fm-edit-save', saveEditor);
+            on('fm-edit-cancel', ()=>switchPage(editReturn));
+            on('fm-edit-back', ()=>switchPage(editReturn));
+            on('fm-term-back', ()=>{ detachProc(true); switchPage(termReturn); });
+            on('fm-open-term', ()=>{ termReturn='files'; switchPage('fileterm'); initTerm(); });
+            on('fm-confirm-cancel', ()=>document.getElementById('fm-confirm').classList.remove('open'));
+            on('fm-confirm-ok', doDelete);
+            on('term-copy', async ()=>{
+                const txt=termBuf||'';
+                try{ await navigator.clipboard.writeText(txt); toast('已复制全部输出'); }
+                catch(e){
+                    const ta=document.createElement('textarea'); ta.value=txt;
+                    ta.style.cssText='position:fixed;left:-9999px;top:0;'; document.body.appendChild(ta);
+                    ta.select(); try{ document.execCommand('copy'); toast('已复制全部输出'); }catch(_){ toast('复制失败',true); }
+                    document.body.removeChild(ta);
+                }
+            });
+            on('term-clear', ()=>{ if(term){ term.clear(); termBuf=''; tw(prompt()); } });
+            on('term-ctrlc', async ()=>{
+                if(attach && !attach.done){
+                    await T('kill -INT -'+attach.procPid+' 2>/dev/null; kill -INT '+attach.procPid+' 2>/dev/null', 8000);
+                    twln('^C'); await detachProc(true); tw(prompt());
+                } else if(term){ twln('^C'); tw(prompt()); }
+            });
+            const ci=document.getElementById('term-cmd');
+            on('term-run', ()=>{ const v=ci.value; ci.value=''; runCmd(v); });
+            if(ci) ci.addEventListener('keydown', (e)=>{
+                if(e.key==='Enter'){ const v=ci.value; ci.value=''; runCmd(v); }
+                else if(e.key==='ArrowUp'){ if(histIdx>0){histIdx--; ci.value=history[histIdx]||'';} e.preventDefault(); }
+                else if(e.key==='ArrowDown'){ if(histIdx<history.length-1){histIdx++; ci.value=history[histIdx]||'';} else {histIdx=history.length; ci.value='';} e.preventDefault(); }
+            });
+            const cm=document.getElementById('fm-confirm');
+            if(cm) cm.addEventListener('click',(e)=>{ if(e.target.id==='fm-confirm') cm.classList.remove('open'); });
+        }
+
+        // switchPage 进入钩子
+        // ===== 自定义冻结应用 =====
+        var frzPkgs = [];
+        var FRZ_CFG = MODDIR + '/pid/freeze_config.txt';
+
+        async function frzLoad() {
+            frzPkgs = [];
+            try {
+                var r = await T('cat ' + q(FRZ_CFG) + ' 2>/dev/null || echo ""', 3000);
+                var txt = (r.stdout || '').trim();
+                if (txt) {
+                    txt.split('\n').forEach(function(line) {
+                        if (line.startsWith('FREEZE_PKGS=')) {
+                            var pkgs = line.slice(12).trim();
+                            frzPkgs = pkgs ? pkgs.split(/\s+/).filter(Boolean) : [];
+                        }
+                    });
+                }
+            } catch(e) {}
+            frzRender();
+            frzRefreshStatus();
+            frzInitCat();
+            // 输入框回车触发添加
+            var inp = document.getElementById('frz-new-pkg');
+            if (inp) {
+                inp.onkeydown = function(e){ if(e.key==='Enter' || e.keyCode===13){ frzAddPkg(); e.preventDefault(); } };
+            }
+        }
+
+        function frzRender() {
+            var list = document.getElementById('frz-pkg-list');
+            if (!list) return;
+            if (frzPkgs.length === 0) {
+                list.innerHTML = '<div style="color:var(--tx3);font-size:10px;text-align:center;padding:10px 0;">暂无，输入包名后点添加</div>';
+                return;
+            }
+            // 直接用 onclick="frzRemove(N)" 避免 Android WebView 事件委托失效
+            list.innerHTML = frzPkgs.map(function(pkg, i) {
+                var safe = pkg.replace(/'/g, "\\'");
+                return '<div style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border-radius:10px;padding:8px 12px;">'
+                    + '<span style="flex:1;font-size:11px;font-family:monospace;word-break:break-all;">' + pkg + '</span>'
+                    + '<button onclick="frzRemove(' + i + ')" style="background:rgba(255,60,60,.2);border:1px solid rgba(255,80,80,.3);border-radius:8px;padding:5px 14px;font-size:10px;color:#ff8080;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:rgba(255,100,100,.2);">删除</button>'
+                    + '</div>';
+            }).join('');
+        }
+
+        function frzRemove(i) {
+            frzPkgs.splice(i, 1);
+            frzRender();
+        }
+
+        function frzAddPkg() {
+            var input = document.getElementById('frz-new-pkg');
+            if (!input) return;
+            var pkg = (input.value || '').trim();
+            if (!pkg) { toast('请输入包名', true); return; }
+            if (frzPkgs.indexOf(pkg) >= 0) { toast('已存在该包名', true); return; }
+            frzPkgs.push(pkg);
+            frzRender();
+            input.value = '';
+            setTimeout(function(){ try{ input.focus(); }catch(e){} }, 50);
+        }
+
+        async function frzSave() {
+            var btn = document.querySelector('#page-freeze .btn[onclick*="frzSave"]');
+            if (btn) { btn.textContent = '保存中...'; btn.disabled = true; }
+            var content = 'FREEZE_PKGS=' + frzPkgs.join(' ');
+            await T('mkdir -p ' + q(MODDIR + '/pid') + ' && printf ' + q(content) + ' > ' + q(FRZ_CFG), 5000);
+            if (btn) { btn.textContent = '保存配置'; btn.disabled = false; }
+            toast('配置已保存，检测到游戏立即生效');
+            frzRefreshStatus();
+        }
+
+        async function frzRefreshStatus() {
+            var el = document.getElementById('frz-status');
+            if (!el) return;
+            var r = await T('FREEZE_CFG=' + q(FRZ_CFG) + '; '
+                + 'if [ -f "$FREEZE_CFG" ]; then '
+                + 'PKGS=$(grep "^FREEZE_PKGS=" "$FREEZE_CFG" | cut -d= -f2-); '
+                + 'IS_ACTIVE=$([ -f ' + q(MODDIR + '/pid/freeze_active') + ' ] && echo "冻结中" || echo "待机"); '
+                + 'echo "冻结状态: $IS_ACTIVE"; '
+                + 'for p in $PKGS; do pm list packages -d 2>/dev/null | grep -q "^package:${p}$" && echo "$p → 已冻结" || echo "$p → 运行中"; done; '
+                + 'else echo "未配置"; fi', 6000);
+            el.textContent = (r.stdout || '未配置').trim();
+        }
+
+        function frzInitCat() {
+            var IDS = ['frz-e0','frz-e1','frz-e2','frz-e3'];
+            var cur = 0, timer;
+            function setE(i) {
+                IDS.forEach(function(id,j){ var el=document.getElementById(id); if(el) el.style.opacity=j===i?'1':'0'; });
+                cur=i;
+            }
+            function rand(){ var n; do{ n=Math.floor(Math.random()*4); }while(n===cur); return n; }
+            function next(){ setE(rand()); timer=setTimeout(function(){ setE(0); timer=setTimeout(next, Math.floor(Math.random()*5000)+4000); }, Math.floor(Math.random()*3000)+2000); }
+            var svg=document.getElementById('frz-cat-svg');
+            if(svg) svg.addEventListener('click',function(){ clearTimeout(timer); setE(rand()); timer=setTimeout(function(){ setE(0); timer=setTimeout(next,4000); },2000); });
+            setTimeout(next,4000);
+        }
+
+        // ===== 全局改机型 =====
+        // 品牌标识：t=字标文字, c=品牌色, fs=字号(可选), box=方框图标(可选), svg=矢量(苹果用)
+        const BRAND_LOGOS = {
+            oppo:     { svg:'<svg viewBox="0 0 24 24" fill="#047A3D"><path d="M2.85 12.786h-.001C1.639 12.774.858 12.2.858 11.321s.781-1.452 1.99-1.465c1.21.013 1.992.588 1.992 1.465s-.782 1.453-1.99 1.465zm.034-3.638h-.073C1.156 9.175 0 10.068 0 11.32s1.156 2.147 2.811 2.174h.073c1.655-.027 2.811-.921 2.811-2.174S4.54 9.175 2.885 9.148zm18.27 3.638c-1.21-.012-1.992-.587-1.992-1.465s.782-1.452 1.991-1.465c1.21.013 1.991.588 1.991 1.465s-.781 1.453-1.99 1.465zm.035-3.638h-.073c-1.655.027-2.811.92-2.811 2.173s1.156 2.147 2.81 2.174h.074C22.844 13.468 24 12.574 24 11.32s-1.156-2.146-2.811-2.173zm-6.126 3.638c-1.21-.012-1.99-.587-1.99-1.465s.78-1.452 1.99-1.465c1.21.013 1.991.588 1.991 1.465s-.781 1.453-1.99 1.465zm.036-3.638h-.073c-.789.013-1.464.222-1.955.574v-.37h-.857v5.5h.857v-1.931c.49.351 1.166.56 1.954.574h.074c1.655-.027 2.81-.921 2.81-2.174s-1.155-2.146-2.81-2.173zm-6.144 3.638c-1.21-.012-1.99-.587-1.99-1.465s.78-1.452 1.99-1.465c1.21.013 1.991.588 1.991 1.465s-.781 1.453-1.99 1.465zm.037-3.638H8.92c-.789.013-1.464.222-1.955.574v-.37h-.856v5.5h.856v-1.931c.491.351 1.166.56 1.955.574a3.728 3.728 0 0 0 .073 0c1.655-.027 2.811-.921 2.811-2.174s-1.156-2.146-2.81-2.173z"/></svg>' },
+            oneplus:  { svg:'<svg viewBox="0 0 24 24" fill="#EB0028"><path d="M0 3.74V24h20.26V12.428h-2.256v9.317H2.254V5.995h9.318V3.742zM18.004 0v3.74h-3.758v2.256h3.758v3.758h2.255V5.996H24V3.74h-3.758V0zm-6.45 18.756V8.862H9.562c0 .682-.228 1.189-.577 1.504-.367.297-.91.437-1.556.437h-.245v1.625h2.133v6.31h2.237z"/></svg>' },
+            samsung:  { svg:'<svg viewBox="0 0 24 24" fill="#1428A0"><path d="M19.8166 10.2808l.0459 2.6934h-.023l-.7793-2.6934h-1.2837v3.3925h.8481l-.0458-2.785h.023l.8366 2.785h1.2264v-3.3925zm-16.149 0l-.6418 3.427h.9284l.4699-3.1175h.0229l.4585 3.1174h.9169l-.6304-3.4269zm5.1805 0l-.424 2.6132h-.023l-.424-2.6132H6.5788l-.0688 3.427h.8596l.023-3.0832h.0114l.573 3.0831h.8711l.5731-3.083h.023l.0228 3.083h.8596l-.0802-3.4269zm-7.2664 2.4527c.0343.0802.0229.1949.0114.2522-.0229.1146-.1031.2292-.3324.2292-.2177 0-.3438-.126-.3438-.3095v-.3323H0v.2636c0 .7679.6074.9971 1.2493.9971.6189 0 1.1346-.2178 1.2149-.7794.0458-.298.0114-.4928 0-.5616-.1605-.722-1.467-.9283-1.5588-1.3295-.0114-.0688-.0114-.1375 0-.1834.023-.1146.1032-.2292.3095-.2292.2063 0 .321.126.321.3095v.2063h.8595v-.2407c0-.745-.6762-.8596-1.1576-.8596-.6074 0-1.1117.2063-1.2034.7564-.023.149-.0344.2866.0114.4585.1376.7106 1.364.9169 1.5358 1.3524m11.152 0c.0343.0803.0228.1834.0114.2522-.023.1146-.1032.2292-.3324.2292-.2178 0-.3438-.126-.3438-.3095v-.3323h-.917v.2636c0 .7564.596.9857 1.2379.9857.6189 0 1.1232-.2063 1.2034-.7794.0459-.298.0115-.4814 0-.5616-.1375-.7106-1.4327-.9284-1.5243-1.318-.0115-.0688-.0115-.1376 0-.1835.0229-.1146.1031-.2292.3094-.2292.1948 0 .321.126.321.3095v.2063h.848v-.2407c0-.745-.6647-.8596-1.146-.8596-.6075 0-1.1004.1948-1.192.7564-.023.149-.023.2866.0114.4585.1376.7106 1.341.9054 1.513 1.3524m2.8882.4585c.2407 0 .3094-.1605.3323-.2522.0115-.0343.0115-.0917.0115-.126v-2.533h.871v2.4642c0 .0688 0 .1948-.0114.2292-.0573.6419-.5616.8482-1.192.8482-.6303 0-1.1346-.2063-1.192-.8482 0-.0344-.0114-.1604-.0114-.2292v-2.4642h.871v2.533c0 .0458 0 .0916.0115.126 0 .0917.0688.2522.3095.2522m7.1518-.0344c.2522 0 .3324-.1605.3553-.2522.0115-.0343.0115-.0917.0115-.126v-.4929h-.3553v-.5043H24v.917c0 .0687 0 .1145-.0115.2292-.0573.6303-.596.8481-1.2034.8481-.6075 0-1.1461-.2178-1.2034-.8481-.0115-.1147-.0115-.1605-.0115-.2293v-1.444c0-.0574.0115-.172.0115-.2293.0802-.6419.596-.8482 1.2034-.8482s1.1347.2063 1.2034.8482c.0115.1031.0115.2292.0115.2292v.1146h-.8596v-.1948s0-.0803-.0115-.1261c-.0114-.0802-.0802-.2521-.3438-.2521-.2521 0-.321.1604-.3438.2521-.0115.0458-.0115.1032-.0115.1605v1.5702c0 .0458 0 .0916.0115.126 0 .0917.0917.2522.3323.2522"/></svg>' },
+            huawei:   { svg:'<svg viewBox="0 0 24 24" fill="#CF0A2C"><path d="M3.67 6.14S1.82 7.91 1.72 9.78v.35c.08 1.51 1.22 2.4 1.22 2.4 1.83 1.79 6.26 4.04 7.3 4.55 0 0 .06.03.1-.01l.02-.04v-.04C7.52 10.8 3.67 6.14 3.67 6.14zM9.65 18.6c-.02-.08-.1-.08-.1-.08l-7.38.26c.8 1.43 2.15 2.53 3.56 2.2.96-.25 3.16-1.78 3.88-2.3.06-.05.04-.09.04-.09zm.08-.78C6.49 15.63.21 12.28.21 12.28c-.15.46-.2.9-.21 1.3v.07c0 1.07.4 1.82.4 1.82.8 1.69 2.34 2.2 2.34 2.2.7.3 1.4.31 1.4.31.12.02 4.4 0 5.54 0 .05 0 .08-.05.08-.05v-.06c0-.03-.03-.05-.03-.05zM9.06 3.19a3.42 3.42 0 00-2.57 3.15v.41c.03.6.16 1.05.16 1.05.66 2.9 3.86 7.65 4.55 8.65.05.05.1.03.1.03a.1.1 0 00.06-.1c1.06-10.6-1.11-13.42-1.11-13.42-.32.02-1.19.23-1.19.23zm8.299 2.27s-.49-1.8-2.44-2.28c0 0-.57-.14-1.17-.22 0 0-2.18 2.81-1.12 13.43.01.07.06.08.06.08.07.03.1-.03.1-.03.72-1.03 3.9-5.76 4.55-8.64 0 0 .36-1.4.02-2.34zm-2.92 13.07s-.07 0-.09.05c0 0-.01.07.03.1.7.51 2.85 2 3.88 2.3 0 0 .16.05.43.06h.14c.69-.02 1.9-.37 3-2.26l-7.4-.25zm7.83-8.41c.14-2.06-1.94-3.97-1.94-3.98 0 0-3.85 4.66-6.67 10.8 0 0-.03.08.02.13l.04.01h.06c1.06-.53 5.46-2.77 7.28-4.54 0 0 1.15-.93 1.21-2.42zm1.52 2.14s-6.28 3.37-9.52 5.55c0 0-.05.04-.03.11 0 0 .03.06.07.06 1.16 0 5.56 0 5.67-.02 0 0 .57-.02 1.27-.29 0 0 1.56-.5 2.37-2.27 0 0 .73-1.45.17-3.14z"/></svg>' },
+            vivo:     { svg:'<svg viewBox="0 0 24 24" fill="#415FFF"><path d="M19.604 14.101c-1.159 0-1.262-.95-1.262-1.24 0-.29.103-1.242 1.262-1.242h2.062c1.16 0 1.263.951 1.263 1.242 0 .29-.104 1.24-1.263 1.24m-2.062-3.527c-2.142 0-2.333 1.752-2.333 2.287 0 .535.19 2.286 2.333 2.286h2.062c2.143 0 2.334-1.751 2.334-2.286 0-.535-.19-2.287-2.334-2.287m-5.477.107c-.286 0-.345.05-.456.213-.11.164-2.022 3.082-2.022 3.082-.06.09-.126.126-.206.126-.08 0-.145-.036-.206-.126 0 0-1.912-2.918-2.022-3.082-.11-.164-.17-.213-.456-.213h-.668c-.154 0-.224.12-.127.267l2.283 3.467c.354.521.614.732 1.196.732s.842-.21 1.196-.732l2.284-3.467c.096-.146.026-.267-.128-.267m-8.876.284c0-.203.08-.284.283-.284h.505c.203 0 .283.08.283.283v3.9c0 .202-.08.283-.283.283h-.505c-.203 0-.283-.08-.283-.283zm-1.769-.285c-.287 0-.346.05-.456.213-.11.164-2.022 3.082-2.022 3.082-.061.09-.126.126-.206.126-.08 0-.145-.036-.206-.126 0 0-1.912-2.918-2.023-3.082-.11-.164-.169-.213-.455-.213H.175c-.171 0-.224.12-.127.267l2.283 3.467c.355.521.615.732 1.197.732.582 0 .842-.21 1.196-.732l2.283-3.467c.097-.146.044-.267-.127-.267m1.055-.893c-.165-.164-.165-.295 0-.46l.351-.351c.165-.165.296-.165.46 0l.352.351c.165.165.165.296 0 .46l-.352.352c-.164.165-.295.165-.46 0z"/></svg>' },
+            honor:    { svg:'<svg viewBox="0 0 24 24" fill="#00A0E0"><path d="M2.601 9.753v1.823H.807V9.753H0v4.498h.807v-1.874h1.794v1.874h.807V9.753h-.807Zm18.671.801h.898c.369 0 .667.297.667.662a.665.665 0 0 1-.667.663h-.898v-1.325Zm-.806-.801v4.498h.806v-2.002l1.68 2.002H24l-1.376-1.64a1.462 1.462 0 0 0-.444-2.858h-1.716.002Zm-7.63-.014v2.807l-1.959-2.807h-.644v4.498h.807v-2.82l1.968 2.82h.633V9.739h-.805Zm-7.532 2.26c0-.832.68-1.506 1.517-1.506A1.51 1.51 0 0 1 8.337 12c0 .832-.679 1.506-1.516 1.506-.403 0-.789-.159-1.073-.441A1.504 1.504 0 0 1 5.304 12v-.001ZM4.497 12c0 .933.566 1.774 1.434 2.132.869.357 1.868.16 2.533-.5.664-.66.863-1.653.503-2.515a2.324 2.324 0 0 0-2.146-1.425 2.316 2.316 0 0 0-2.323 2.307L4.497 12Zm11.04-.001a1.513 1.513 0 0 1 1.518-1.506c.838 0 1.516.675 1.516 1.507a1.513 1.513 0 0 1-1.518 1.506c-.402 0-.788-.159-1.072-.441a1.5 1.5 0 0 1-.444-1.066ZM14.73 12c0 .933.566 1.774 1.434 2.132.868.357 1.868.16 2.532-.5.665-.66.864-1.653.504-2.515a2.325 2.325 0 0 0-2.147-1.425 2.316 2.316 0 0 0-2.323 2.307V12Z"/></svg>' },
+            realme:  { t:'realme',   c:'#F8B500', fs:8.5},
+            redmi:   { t:'Redmi',    c:'#FF6900', fs:8.5},
+            nubia:   { t:'nubia',    c:'#C8102E', fs:8.5},
+            redmagic:{ t:'RedMagic', c:'#E60012', fs:6.5},
+            apple:   { svg:'<svg viewBox=\"0 0 24 24\" fill=\"#555\"><path d=\"M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z\"/></svg>' },
+            iqoo:    { t:'iQOO',     c:'#0A1F8F', fs:8.5},
+            google:   { svg:'<svg viewBox="0 0 24 24" fill="#4285F4"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>' },
+            xiaomi:   { svg:'<svg viewBox="0 0 24 24" fill="#FF6900"><path d="M12 0C8.016 0 4.756.255 2.493 2.516.23 4.776 0 8.033 0 12.012c0 3.98.23 7.235 2.494 9.497C4.757 23.77 8.017 24 12 24c3.983 0 7.243-.23 9.506-2.491C23.77 19.247 24 15.99 24 12.012c0-3.984-.233-7.243-2.502-9.504C19.234.252 15.978 0 12 0zM4.906 7.405h5.624c1.47 0 3.007.068 3.764.827.746.746.827 2.233.83 3.676v4.54a.15.15 0 0 1-.152.147h-1.947a.15.15 0 0 1-.152-.148V11.83c-.002-.806-.048-1.634-.464-2.051-.358-.36-1.026-.441-1.72-.458H7.158a.15.15 0 0 0-.151.147v6.98a.15.15 0 0 1-.152.148H4.906a.15.15 0 0 1-.15-.148V7.554a.15.15 0 0 1 .15-.149zm12.131 0h1.949a.15.15 0 0 1 .15.15v8.892a.15.15 0 0 1-.15.148h-1.949a.15.15 0 0 1-.151-.148V7.554a.15.15 0 0 1 .151-.149zM8.92 10.948h2.046c.083 0 .15.066.15.147v5.352a.15.15 0 0 1-.15.148H8.92a.15.15 0 0 1-.152-.148v-5.352a.15.15 0 0 1 .152-.147Z"/></svg>' },
+            meizu:    { svg:'<svg viewBox="0 0 24 24" fill="#0B7BC4"><path d="M20.045 18.818h3.546A.41.41 0 0 0 24 18.41v-3.545a.41.41 0 0 0-.41-.41h-3.545a.41.41 0 0 0-.409.41v3.545c0 .226.184.41.41.41zM13.8 12.11a.095.095 0 0 1-.163-.068V5.591a.41.41 0 0 0-.409-.41H10.59a.545.545 0 0 0-.385.16L.16 15.387a.545.545 0 0 0-.16.385v2.638c0 .226.183.41.41.41h2.637a.547.547 0 0 0 .385-.16l6.769-6.769a.096.096 0 0 1 .163.068v6.451c0 .226.183.41.409.41h2.638a.547.547 0 0 0 .385-.16L23.84 8.613A.545.545 0 0 0 24 8.23V5.59a.41.41 0 0 0-.41-.41h-2.637a.546.546 0 0 0-.386.16z"/></svg>' },
+            nothing: { t:'Nothing',  c:'#111111', fs:7.5},
+            smartisan:{ t:'坚果',    c:'#E60012', fs:10 },
+            default: { t:'?',        c:'#8E8E93', fs:11 },
+        };
+        const MODELS = [
+        // ── 原有机型 ──
+            { id:'oppo_pad4pro',          name:'OPPO Pad 4 Pro',           sub:'oppo · OPD2409',         brand:'oppo'     },
+            { id:'oneplus15',             name:'一加 15',                  sub:'OnePlus · PLK110',       brand:'oneplus'  },
+            { id:'oneplus_ace6t',         name:'一加 Ace 6T',              sub:'OnePlus · PLR110',       brand:'oneplus'  },
+            { id:'realme_neo8',           name:'真我 Neo8',                sub:'realme · RMX8899',       brand:'realme'   },
+            { id:'iqoo15ultra',           name:'iQOO 15 Ultra',            sub:'vivo · V2546A',          brand:'iqoo'     },
+            { id:'nubia_z70ultra',        name:'努比亚 Z70 Ultra',         sub:'nubia · NX733J',         brand:'nubia'    },
+            { id:'huawei_mate60rs',       name:'华为 Mate 60 RS',          sub:'HUAWEI · ALN-AL10',      brand:'huawei'   },
+            { id:'huawei_mate80promax',   name:'华为 Mate 80 Pro Max',     sub:'huawei · SGT-AL10',      brand:'huawei'   },
+            { id:'redmagic_tab3pro',      name:'红魔电竞平板3 Pro',        sub:'nubia · NP05J',          brand:'redmagic' },
+            { id:'redmagic11pro',         name:'红魔 11 Pro+',             sub:'ZTE · NX809J',           brand:'redmagic' },
+            // ── 新增机型 ──
+            { id:'oneplus_15t',           name:'一加 15 T',                sub:'OnePlus · PLZ110',       brand:'oneplus'  },
+            { id:'oneplus_ace6_supreme',  name:'一加 ACE6 至尊版',         sub:'oneplus · PMB110',       brand:'oneplus'  },
+            { id:'oneplus_pad3pro',       name:'一加平板 3 Pro',           sub:'oneplus · OPD2513',      brand:'oneplus'  },
+            { id:'samsung_s26ultra',      name:'Galaxy S26 Ultra',         sub:'samsung · SM-S9480',     brand:'samsung'  },
+            { id:'huawei_pura90promax',   name:'华为 Pura 90 Pro Max',     sub:'huawei · SCA-AL00',      brand:'huawei'   },
+            { id:'huawei_pura90pro',      name:'华为 Pura 90 Pro',         sub:'huawei · MLN-AL00',      brand:'huawei'   },
+            { id:'huawei_pura90',         name:'华为 Pura 90',             sub:'huawei · KEE-AL00',      brand:'huawei'   },
+            { id:'huawei_puraxmax',       name:'华为 Pura X Max',          sub:'huawei · HOP-AL00',      brand:'huawei'   },
+            { id:'redmi_k90max',          name:'红米 K90 Max',             sub:'Xiaomi · 2604FRK1EC',    brand:'redmi'    },
+            { id:'redmagic_tab3d',        name:'红魔平板 3D探索版',        sub:'nubia · NP02J',          brand:'redmagic' },
+            { id:'honor_magic8proair',    name:'荣耀 Magic 8 Pro Air',     sub:'HONOR · LDY-AN00',       brand:'honor'    },
+            { id:'oppo_findx9ultra_sat',  name:'OPPO Find X9 Ultra 卫星版',sub:'oppo · PMA120',          brand:'oppo'     },
+            { id:'oppo_findx9ultra',      name:'OPPO Find X9 Ultra',       sub:'oppo · PMA110',          brand:'oppo'     },
+            { id:'oppo_findx9spro',       name:'OPPO Find X9 s Pro',       sub:'oppo · PME110',          brand:'oppo'     },
+            { id:'oppo_pad3pro',          name:'OPPO Pad 3 Pro',           sub:'oppo · OPD2401',         brand:'oppo'     },
+            { id:'oppo_pad3',             name:'OPPO Pad 3',               sub:'oppo · OPD2405',         brand:'oppo'     },
+            { id:'oppo_pad5pro',          name:'OPPO Pad 5 Pro',           sub:'oppo · OPD2511',         brand:'oppo'     },
+            { id:'oppo_pad5',             name:'OPPO Pad 5',               sub:'oppo · OPD2407',         brand:'oppo'     },
+            { id:'oppo_padmini',          name:'OPPO Pad Mini',            sub:'oppo · OPD2515',         brand:'oppo'     },
+            { id:'iphone_17promax',       name:'iPhone 17 Pro Max',        sub:'Apple · iPhone19,2',     brand:'apple'    },
+            { id:'vivo_x300ultra_photo',  name:'vivo X300 Ultra 摄影师版', sub:'vivo · V2547DA',         brand:'vivo'     },
+            { id:'vivo_x300s',            name:'vivo X300 s',              sub:'vivo · V2548A',          brand:'vivo'     },
+            { id:'oppo_a6',               name:'OPPO A6',                  sub:'oppo · PLS120',          brand:'oppo'     },
+            { id:'oppo_a5',               name:'OPPO A5',                  sub:'oppo · PBBM30',          brand:'oppo'     },
+            { id:'oppo_findx8ultra',      name:'OPPO Find X8 Ultra',       sub:'oppo · PKJ110',          brand:'oppo'     },
+            { id:'xiaomi_14tpro',         name:'Xiaomi 14T Pro 海外版',   sub:'Xiaomi · 2407FPN8EG',    brand:'xiaomi'   },
+            { id:'xiaomi_17promax',       name:'Xiaomi 17 Pro Max',        sub:'Xiaomi · 2509FPN0BC',    brand:'xiaomi'   },
+            { id:'xiaomi_17ultra',        name:'Xiaomi 17 Ultra',          sub:'Xiaomi · 2512BPNDAC',    brand:'xiaomi'   },
+            { id:'xiaomi_17ultra_leica',  name:'Xiaomi 17 Ultra 徕卡版', sub:'Xiaomi · 25128PNA1C',    brand:'xiaomi'   },
+            { id:'honor_winrt',           name:'荣耀 WIN RT',           sub:'HONOR · AAK-AN00',       brand:'honor'    },
+            { id:'honor_magicv6_1tb',     name:'荣耀 Magic V6 1TB',     sub:'HONOR · PNM-AN20',       brand:'honor'    },
+            { id:'honor_magic8rsr',       name:'荣耀 Magic 8 RSR',      sub:'HONOR · BKQ-AN20',       brand:'honor'    },
+            { id:'huawei_matext',         name:'华为 Mate XT 非凡大师', sub:'huawei · GRL-AL10',  brand:'huawei'   },
+            { id:'google_pixel9',         name:'Google Pixel 9',           sub:'Google · G2YBB',         brand:'google'   },
+            { id:'iphone_16promax',       name:'iPhone 16 Pro Max',        sub:'Apple · A3297',          brand:'apple'    },
+            { id:'meizu_22',              name:'魅族 22',               sub:'meizu · M582Q',          brand:'meizu'    },
+            { id:'nothing_phone1',        name:'Nothing Phone (1)',        sub:'Nothing · A063',         brand:'nothing'  },
+            { id:'smartisan_r2',          name:'坚果 R2',               sub:'Smartisan · DT2002C',    brand:'smartisan'},
+        ];
+        const MODEL_SH='/data/adb/modules/xinmaskplus/scripts/model_spoof.sh';
+        let pendingReboot=false;
+
+        async function loadModels(){
+            const cur=(await T('sh '+MODEL_SH+' status 2>/dev/null')).stdout.trim();
+            const list=document.getElementById('model-list');
+            list.innerHTML='';
+            const order=['huawei','honor','xiaomi','redmi','redmagic','oppo','oneplus','realme','vivo','iqoo','nubia','samsung','google','apple','meizu','nothing','smartisan'];
+            const bnames={huawei:'华为',honor:'荣耀',xiaomi:'小米',redmi:'红米',redmagic:'红魔',oppo:'OPPO',oneplus:'一加',realme:'真我',vivo:'vivo',iqoo:'iQOO',nubia:'努比亚',samsung:'三星',google:'Google',apple:'Apple',meizu:'魅族',nothing:'Nothing',smartisan:'坚果'};
+            const sorted=MODELS.slice().sort((a,b)=>{
+                let ia=order.indexOf(a.brand), ib=order.indexOf(b.brand);
+                if(ia<0)ia=999; if(ib<0)ib=999;
+                if(ia!==ib) return ia-ib;
+                return a.name.localeCompare(b.name);
+            });
+            let lastBrand=null;
+            sorted.forEach(mo=>{
+                if(mo.brand!==lastBrand){
+                    lastBrand=mo.brand;
+                    const h=document.createElement('div');
+                    h.style.cssText='grid-column:1/-1;font-size:12px;font-weight:800;color:var(--tx2);padding:10px 2px 0;letter-spacing:.5px;';
+                    h.textContent=bnames[mo.brand]||mo.brand;
+                    list.appendChild(h);
+                }
+                const on = (cur===mo.id);
+                const card=document.createElement('div');
+                card.className='model-card';
+                const bl = (BRAND_LOGOS[mo.brand]||BRAND_LOGOS['default']);
+                let logoHtml;
+                if(bl.svg){
+                    logoHtml = '<div class="mc-logo mc-logo-svg">'+bl.svg+'</div>';
+                }else if(bl.box){
+                    logoHtml = '<div class="mc-logo mc-logo-box" style="background:'+bl.c+'">'+escapeHtml(bl.t)+'</div>';
+                }else{
+                    logoHtml = '<div class="mc-logo mc-logo-text" style="color:'+bl.c+';font-size:'+(bl.fs||9)+'px">'+escapeHtml(bl.t)+'</div>';
+                }
+                card.innerHTML=
+                    '<div class="mc-name">'+escapeHtml(mo.name)+'</div>'+
+                    '<div class="mc-sub">'+escapeHtml(mo.sub)+'</div>'+
+                    '<div class="mc-bottom">'+
+                      logoHtml+
+                      '<div class="mc-toggle"><label class="toggle"><input type="checkbox" '+(on?'checked':'')+'><span class="toggle-slider"></span></label></div>'+
+                    '</div>';
+                const cb=card.querySelector('input');
+                cb.addEventListener('change', ()=>toggleModel(mo, cb));
+                list.appendChild(card);
+            });
+        }
+
+        async function toggleModel(mo, cb){
+            if(cb.checked){
+                // 开：先关掉其它已开的(互斥)
+                const r=await T('sh '+MODEL_SH+' apply '+q(mo.id)+' 2>&1', 15000);
+                const out=(r.stdout||'').trim();
+                if(out.indexOf('NO_RESETPROP')!==-1){
+                    toast('未找到 resetprop，无法改机型', true); cb.checked=false; return;
+                }
+                if(out.indexOf('OK')===-1){ toast('应用失败', true); cb.checked=false; return; }
+                toast('已应用: '+mo.name);
+                askReboot('已开启「'+mo.name+'」', '建议重启使所有应用识别新机型。');
+            }else{
+                await T('sh '+MODEL_SH+' restore 2>&1', 15000);
+                toast('已关闭，重启后恢复原机型');
+                askReboot('已关闭机型伪装', '重启后将恢复设备原本机型。');
+            }
+            // 互斥：刷新其它卡状态
+            loadModels();
+        }
+
+        function askReboot(title, sub){
+            document.getElementById('model-reboot-title').textContent=title;
+            document.getElementById('model-reboot-sub').textContent=sub;
+            document.getElementById('model-reboot').classList.add('open');
+        }
+
+        function bindModels(){
+            const on=(id,fn)=>{ const e=document.getElementById(id); if(e) e.addEventListener('click',fn); };
+            on('model-reboot-later', ()=>document.getElementById('model-reboot').classList.remove('open'));
+            on('model-reboot-now', async ()=>{
+                document.getElementById('model-reboot').classList.remove('open');
+                await T('sync; setsid sh -c "sleep 1; svc power reboot || reboot" >/dev/null 2>&1 &', 8000);
+            });
+            const m=document.getElementById('model-reboot');
+            if(m) m.addEventListener('click',(e)=>{ if(e.target.id==='model-reboot') m.classList.remove('open'); });
+        }
+
+        window.__fmOnEnter = function(p){
+            if(p==='files'){
+                // 进文件管理器时，优先跳到你设的首页，杂鱼别再迷路啦喵
+                let target = curDir;
+                try {
+                    const home = localStorage.getItem('xinmask_fm_home');
+                    if(home && home.startsWith('/')) target = home;
+                } catch(e) {}
+                listDir(target);
+            }
+            if(p==='fileterm'){ initTerm(); }
+            if(p==='models'){ loadModels(); }
+            if(p==='freeze'){ frzLoad(); }
+        };
+        // ===== KSU越狱工具函数 =====
+const SCRIPT_BASE = '/data/adb/modules/xinmaskplus/bin/';
+
+function showJailbreakTip(text) {
+    let old = document.querySelector('.jb-tip-modal');
+    if (old) old.remove();
+    let m = document.createElement('div');
+    m.className = 'jb-tip-modal';
+    m.style.cssText = 'position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;';
+    m.innerHTML = '<div style=\"background:#fff;width:240px;padding:30px 20px;border-radius:20px;text-align:center;\"><div style=\"font-size:16px;font-weight:600;margin-bottom:20px;color:#333;white-space:pre-line;\">'+text+'</div><button onclick=\"this.closest(&quot;.jb-tip-modal&quot;).remove()\" style=\"background:#667eea;color:#fff;border:none;padding:10px 25px;border-radius:10px;cursor:pointer;\">OK</button></div>';
+    document.body.appendChild(m);
+}
+
+async function runKsuReload() {
+    showJailbreakTip('正在重载KSU模块...');
+    await T('sh ' + SCRIPT_BASE + 'ksu_reload.sh 2>&1');
+    setTimeout(function(){ showJailbreakTip('重载完成'); }, 1500);
+}
+
+async function runRcqXt() {
+    showJailbreakTip('正在热重启 Zygote...');
+    await T('sh ' + SCRIPT_BASE + 'rcq_xt.sh 2>&1');
+    setTimeout(function(){ showJailbreakTip('热重启已触发\\n系统将重新启动'); }, 1000);
+}
+
+async function runHideEnv() {
+    showJailbreakTip('正在隐藏ROOT环境...');
+    var cmds = [
+        "resetprop -n ro.boot.vbmeta.device_state locked",
+        "resetprop -n ro.boot.verifiedbootstate green",
+        "resetprop -n ro.debuggable 0",
+        "resetprop -n ro.secure 1",
+        "resetprop -n ro.build.type user",
+        "resetprop -n ro.build.tags release-keys",
+        "setenforce 1",
+        "for p in $(pidof magisk su ksu); do chmod 000 /proc/$p 2>/dev/null; done"
+    ].join(" && ");
+    await T(cmds);
+    setTimeout(function(){ showJailbreakTip('环境隐藏完成'); }, 800);
+}
+
+async function runCleanTmp() {
+    showJailbreakTip('正在清理...');
+    await T('rm -rf /data/local/tmp/* 2>/dev/null');
+    setTimeout(function(){ showJailbreakTip('/data/local/tmp\\n清理完成'); }, 500);
+}
+
+// 深度环境审计
+async function runEnvAudit() {
+    var auditDiv = document.getElementById('audit-result');
+    if (!auditDiv) return;
+    auditDiv.style.display = '';
+    auditDiv.textContent = '正在执行深度环境审计...';
+    var result = await T('sh /data/adb/modules/xinmaskplus/scripts/env_audit.sh 2>&1', 30000);
+    var out = (result.stdout || result.stderr || '无输出').replace(/\x1b\[[0-9;]*m/g, '');
+    auditDiv.textContent = out;
+}
+window.runEnvAudit = runEnvAudit;
+
+// 页面加载时检测越狱模式
+async function checkJailbreakMode() {
+    try {
+        var resp = await fetch('feature_status.txt?t=' + Date.now());
+        var text = await resp.text();
+        var isJailbreak = false;
+        text.split('\\n').forEach(function(line) {
+            if (line.split('=')[0] === 'ksu_jailbreak' && line.split('=')[1] === '1') isJailbreak = true;
+        });
+        var pidResp = await T('test -f /data/adb/modules/xinmaskplus/pid/ksu_jailbreak && echo 1 || echo 0');
+        if (isJailbreak || (pidResp.stdout && pidResp.stdout.trim() === '1')) {
+            var entry = document.getElementById('jailbreakEntry');
+            if (entry) entry.style.display = '';
+        }
+    } catch(e) {}
+}
+
+setTimeout(checkJailbreakMode, 2000);
+
+if(document.readyState!=='loading') { bind(); bindModels(); } else document.addEventListener('DOMContentLoaded', function(){ bind(); bindModels(); });
+        // 暴露 frz 函数到 window，使 HTML inline onclick 可以调用
+        window.frzAddPkg = frzAddPkg;
+        window.frzRemove = frzRemove;
+        window.frzSave = frzSave;
+        window.frzRefreshStatus = frzRefreshStatus;
+        window.frzLoad = frzLoad;
+        window.frzForceUnfreeze = async function() {
+            if (!confirm('立即强制解冻所有冻结应用？')) return;
+            // 写 force_unfreeze 标志，monitor_app.sh 下个周期检测到后执行
+            await T('touch ' + q(MODDIR + '/pid/force_unfreeze'), 3000);
+            // 同时直接执行解冻（双保险）
+            var cfg = await T('cat ' + q(MODDIR + '/pid/freeze_config.txt') + ' 2>/dev/null', 3000);
+            var txt = (cfg.stdout || '').trim();
+            var pkgs = [];
+            txt.split('\n').forEach(function(l){ if(l.startsWith('FREEZE_PKGS=')) pkgs = l.slice(12).trim().split(/\s+/).filter(Boolean); });
+            for (var i = 0; i < pkgs.length; i++) {
+                await T('pm enable --user 0 ' + q(pkgs[i]) + ' 2>/dev/null; cmd package install-existing ' + q(pkgs[i]) + ' >/dev/null 2>&1', 5000);
+            }
+            await T('rm -f ' + q(MODDIR + '/pid/freeze_active'), 3000);
+            toast('已手动解冻 ' + pkgs.length + ' 个应用');
+            frzRefreshStatus();
+        };
+        window.frzRunDiag = async function() {
+            var el = document.getElementById('frz-diag');
+            if (el) el.textContent = '诊断运行中...';
+            var r = await T('sh ' + q(MODDIR + '/scripts/diag.sh') + ' 2>&1', 15000);
+            var out = (r.stdout || '').trim() || (r.stderr || '').trim() || '无输出，diag.sh可能不存在';
+            if (el) el.textContent = out;
+        };
+        window.frzCopyDiag = function() {
+            var el = document.getElementById('frz-diag');
+            if (!el) return;
+            try {
+                navigator.clipboard.writeText(el.textContent);
+                toast('已复制，可粘贴发给开发者');
+            } catch(e) {
+                toast('复制失败，请手动长按选择', true);
+            }
+        };
+    })();
+
+</script>
+    <div id="donateModal" class="donate-modal" onclick="hideDonate()"><img id="donateModalImg" src="" alt="收款码"></div>
+    <div id="noticeModal" class="notice-modal">
+      <div class="notice-box">
+        <div class="notice-title">Xmask公告</div>
+        <div id="noticeContent"></div>
+        <div class="modal-hint"></div>
+      </div>
     </div>
-</div>
+    <script>
+    function showDonate(t){var m=document.getElementById('donateModal');var img=document.getElementById('donateModalImg');img.src=(t==='zfb'?'donate_zfb.jpg':'donate_wx.jpg');m.classList.add('show');}
+    function hideDonate(){document.getElementById('donateModal').classList.remove('show');}
+    </script>
+
+    <script>
+    const noticeModal   = document.getElementById('noticeModal');
+    const noticeContent = document.getElementById('noticeContent');
+    const modalHint     = document.querySelector('.modal-hint');
+    let noticeClosable  = false;
+
+    async function initNotice() {
+      if (!noticeModal || !noticeContent) return;
+      noticeModal.classList.add('show');
+      noticeContent.innerHTML = "正在获取公告...";
+      noticeClosable = false;
+      if (modalHint) modalHint.innerText = "公告加载中，请稍候...";
+      try {
+        if (typeof ksu !== 'undefined' && ksu.exec) {
+          const res = await ksu.exec('sh /data/adb/modules/xinmaskplus/webroot/gg.sh');
+          let out = (typeof res === 'string') ? res.trim()
+                  : (res && res.stdout ? res.stdout.trim() : "");
+          if (out && out !== "NOTICE_FAIL") {
+            try {
+              const bin = atob(out);
+              const bytes = new Uint8Array(bin.length);
+              for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+              const text = new TextDecoder('utf-8').decode(bytes);
+              noticeContent.innerHTML = text.split(/\r?\n/)
+                .map(l => `<div>${l || '&nbsp;'}</div>`).join('');
+            } catch (e) { noticeContent.innerHTML = "公告解码失败"; }
+          } else {
+            noticeContent.innerHTML = "公告加载失败，请检查网络";
+          }
+        } else {
+          noticeContent.innerHTML = "请在 KernelSU 管理器中打开本页面";
+        }
+      } catch (e) {
+        noticeContent.innerHTML = "公告异常：" + e.message;
+      }
+      noticeClosable = true;
+      if (modalHint) modalHint.innerText = "点击空白处关闭";
+    }
+    if (noticeModal) {
+      noticeModal.addEventListener('click', (e) => {
+        if (e.target === noticeModal && noticeClosable) noticeModal.classList.remove('show');
+      });
+    }
+    initNotice();
+
+    let __upPoll = null;
+    function bindCloudUpdate(){
+      const card = document.getElementById('cloudUpdateCard');
+      const sub  = document.getElementById('cloudUpdateSub');
+      if(!card || !sub) return;
+      const set = t => sub.textContent = t;
+      card.addEventListener('click', async ()=>{
+        set('正在连接...');
+        const r = await T('sh /data/adb/modules/xinmaskplus/webroot/xz.sh');
+        if((r.stdout||'').trim()==='RUNNING') set('已有更新任务进行中...');
+        if(__upPoll) clearInterval(__upPoll);
+        __upPoll = setInterval(async ()=>{
+          const s = (await T('cat /data/local/tmp/xmark_up.status 2>/dev/null')).stdout.trim();
+          if(s.indexOf('DOWNLOADING')===0) set('正在下载最新版...');
+          else if(s.indexOf('INSTALLING')===0) set('正在替换文件...');
+          else if(s.indexOf('DONE')===0){ clearInterval(__upPoll); set('更新完成 '+(s.split(':')[1]||'')+'，退出重进生效'); }
+          else if(s.indexOf('FAILED')===0){ clearInterval(__upPoll); set('更新失败：'+(s.split(':')[1]||'未知')); }
+        }, 1500);
+      });
+    }
+    bindCloudUpdate();
+    </script>
 </body>
 </html>
