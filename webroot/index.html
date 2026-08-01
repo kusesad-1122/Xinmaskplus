@@ -861,7 +861,7 @@
                     <span class="func-switch-title">增强ColorOS信号</span>
                     <label class="toggle"><input type="checkbox" id="colorosSignalToggle" onchange="toggleColorOSSignal()"><span class="toggle-slider"></span></label>
                 </div>
-                <div class="func-switch-desc">移除系统伪基站应用 (BlackListApp)，提升 5G 信号稳定性。<br>原理：OPPO 默认开启伪基站且无开关，该应用会导致信号随距离衰减。替换为空壳后信号更稳定。</div>
+                <div class="func-switch-desc">移除系统伪基站应用 (BlackListApp)，提升 5G 信号稳定性。<br>原理：OPPO 默认开启伪基站且无开关，该应用会导致信号随距离衰减。替换为空壳后信号更稳定。<br><span style='color:#f99'>注意：需自备真实有效 APK 放入 files/BlackListApp.apk，占位文件不会被挂载。</span></div>
                 <div class="led-container" id="led-colorosSignal" style="display: none;"><span class="running-led"></span> 运行中</div>
             </div>
             <div class="func-switch-item">
@@ -1674,6 +1674,13 @@ jailbreak:$('page-jailbreak')
     async function toggleColorOSSignal() {
         const on = document.getElementById('colorosSignalToggle').checked;
         if (on) {
+            // v2.7.3: 校验 APK 有效（非空、ZIP 头、大于 1KB）后才允许挂载，避免空壳损坏系统应用
+            const apk=await T('F=/data/adb/modules/xinmaskplus/files/BlackListApp.apk; [ -s "$F" ] && [ "$(head -c 2 "$F" 2>/dev/null)" = "PK" ] && [ "$(stat -c%s "$F" 2>/dev/null)" -gt 1024 ] && echo OK || echo BAD',5000);
+            if((apk.stdout||'').trim()!=='OK'){
+                toast('⚠ 信号增强需要真实有效的 APK：请将 APK 放入 files/BlackListApp.apk（当前占位文件无效，已跳过，避免损坏系统应用）', true);
+                document.getElementById('colorosSignalToggle').checked=false;
+                return;
+            }
             await T('mkdir -p /data/adb/modules/xinmaskplus/pid && touch /data/adb/modules/xinmaskplus/pid/coloros_signal');
             await T('sh /data/adb/modules/xinmaskplus/scripts/signal_boost.sh on');
         } else {
@@ -2877,17 +2884,28 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
             if(!attach) return;
             if(attach.timer){ clearInterval(attach.timer); attach.timer=null; }
             const a=attach; attach=null;
+            // v2.7.3: term_kill.sh 未随包发布时改用 pkill -P 兜底杀进程树
+            const tk=await T('[ -f /data/adb/modules/xinmaskplus/scripts/term_kill.sh ] && echo Y || echo N',3000);
+            const hasTk=(tk.stdout||'').trim()==='Y';
             if(a.watcher){
                 // 常驻模式：PID 由守护写入文件，从文件读取后终止
                 if(kill){
-                    await T('P=$(cat '+PROCPID+' 2>/dev/null); K=$(cat '+KEEPERPID+' 2>/dev/null); [ -n "$P" ] && sh /data/adb/modules/xinmaskplus/scripts/term_kill.sh tree "$P"; [ -n "$K" ] && kill $K 2>/dev/null', 10000);
+                    if(hasTk){
+                        await T('P=$(cat '+PROCPID+' 2>/dev/null); K=$(cat '+KEEPERPID+' 2>/dev/null); [ -n "$P" ] && sh /data/adb/modules/xinmaskplus/scripts/term_kill.sh tree "$P"; [ -n "$K" ] && kill $K 2>/dev/null', 10000);
+                    }else{
+                        await T('P=$(cat '+PROCPID+' 2>/dev/null); K=$(cat '+KEEPERPID+' 2>/dev/null); [ -n "$P" ] && pkill -P "$P" 2>/dev/null; [ -n "$P" ] && kill -9 "$P" 2>/dev/null; [ -n "$K" ] && kill $K 2>/dev/null', 10000);
+                    }
                 }else{
                     await T('K=$(cat '+KEEPERPID+' 2>/dev/null); [ -n "$K" ] && kill $K 2>/dev/null', 8000);
                 }
             }else{
                 // 直接模式：PID 在本地变量
                 if(kill){
-                    await T('sh /data/adb/modules/xinmaskplus/scripts/term_kill.sh tree '+a.procPid+' 2>/dev/null; kill '+a.keeperPid+' 2>/dev/null', 10000);
+                    if(hasTk){
+                        await T('sh /data/adb/modules/xinmaskplus/scripts/term_kill.sh tree '+a.procPid+' 2>/dev/null; kill '+a.keeperPid+' 2>/dev/null', 10000);
+                    }else{
+                        await T('pkill -P '+a.procPid+' 2>/dev/null; kill -9 '+a.procPid+' 2>/dev/null; kill '+a.keeperPid+' 2>/dev/null', 10000);
+                    }
                 }else{
                     await T('kill '+a.keeperPid+' 2>/dev/null', 8000);
                 }
@@ -2905,6 +2923,12 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
         async function launchGoterm(binPath){
             const binName=binPath.split('/').pop();
             await T('printf %s '+q(binPath)+' > /data/local/tmp/xmp_term_current 2>/dev/null',3000);
+            // v2.7.3: goterm 未随包发布时直接提示，避免无限超时
+            const hasGoterm=await T('[ -f '+MODDIR+'/bin/goterm ] && echo Y || echo N',3000);
+            if((hasGoterm.stdout||'').trim()!=='Y'){
+                toast('⚠ 终端组件缺失：未找到 '+MODDIR+'/bin/goterm（该二进制未随模块发布，请手动放入后重试）', true);
+                return;
+            }
             const check=await T('curl -s --max-time 1 http://127.0.0.1:'+GOTERM_PORT+'/health 2>/dev/null || echo NOCONN',4000);
             let alive=((check.stdout||'').trim()==='ok');
             if(!alive){
@@ -2922,8 +2946,14 @@ lines.push(selinuxStatus.includes("强制") ? "✅ SELinux状态: 强制模式 (
             const hasTmux=/tmux/i.test(tmuxChk.stdout||'');
             let url;
             if(hasTmux){
-                await T('printf %s '+q(binPath)+' > /data/local/tmp/xmp_tmux_target; chmod 0755 '+MODDIR+'/scripts/tmrun.sh '+MODDIR+'/bin/tmux 2>/dev/null',3000);
-                url='http://127.0.0.1:'+GOTERM_PORT+'/?bin='+encodeURIComponent(MODDIR+'/scripts/tmrun.sh')+'#name='+encodeURIComponent(binName);
+                // v2.7.3: tmrun.sh 也缺失时退回直接启动
+                const hasTmrun=await T('[ -f '+MODDIR+'/scripts/tmrun.sh ] && echo Y || echo N',3000);
+                if((hasTmrun.stdout||'').trim()==='Y'){
+                    await T('printf %s '+q(binPath)+' > /data/local/tmp/xmp_tmux_target; chmod 0755 '+MODDIR+'/scripts/tmrun.sh '+MODDIR+'/bin/tmux 2>/dev/null',3000);
+                    url='http://127.0.0.1:'+GOTERM_PORT+'/?bin='+encodeURIComponent(MODDIR+'/scripts/tmrun.sh')+'#name='+encodeURIComponent(binName);
+                } else {
+                    url='http://127.0.0.1:'+GOTERM_PORT+'/?bin='+encodeURIComponent(binPath);
+                }
             } else {
                 url='http://127.0.0.1:'+GOTERM_PORT+'/?bin='+encodeURIComponent(binPath);
             }

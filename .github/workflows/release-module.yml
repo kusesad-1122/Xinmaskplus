@@ -39,7 +39,7 @@ jobs:
           mkdir -p zygisk
           # 从上一版发行包中提取 zygisk/arm64-v8a.so;compile.yml 在私仓构建,这里复用
           for SRC in \
-            "https://github.com/${{ github.repository }}/releases/download/v2.6.0/Xmark-Tools.zip" \
+            "https://github.com/${{ github.repository }}/releases/download/v2.6/Xmark-Tools.zip" \
             "https://github.com/${{ github.repository }}/releases/download/v2.5/Xmark-Tools.zip"; do
             if curl -fsSL -o /tmp/prior.zip "$SRC"; then
               echo "downloaded $SRC"
@@ -66,7 +66,7 @@ jobs:
             ./ "$STAGE/"
           cp zygisk/arm64-v8a.so "$STAGE/zygisk/arm64-v8a.so"
           cd "$STAGE"
-          # 与 v2.6.0 的 zip 一致:仓库根目录直接作为压缩包根
+          # 与 v2.6 的 zip 一致:仓库根目录直接作为压缩包根
           zip -q -r "$GITHUB_WORKSPACE/Xmark-Tools.zip" .
           cd -
           ls -lh Xmark-Tools.zip
@@ -97,8 +97,16 @@ jobs:
           assert 'force_hide=${fh}' in d
           assert 'coloros_lock=${cl}' in d
           assert 'rkp_done' in d
+          assert 'MODULE_VERSION=2.3' not in d, 'monitor_app.sh still hardcodes 2.3'
+          assert 'module.prop' in d and 'mver' in d, 'monitor_app.sh does not read version from module.prop'
           print('monitor_app.sh v2.7 fixes verified')
           PY
+          # v2.7.3: 发布包不得携带运行态 pid/ 文件
+          if unzip -l Xmark-Tools.zip | grep -Eq ' pid/'; then
+            echo "ERROR: release ZIP must not contain pid/ runtime files"
+            exit 1
+          fi
+          echo "pid/ runtime files excluded from release"
           # service.sh PERSIST_FLAGS 必须扩宽
           unzip -p Xmark-Tools.zip service.sh > /tmp/sv.sh
           python3 - <<'PY'

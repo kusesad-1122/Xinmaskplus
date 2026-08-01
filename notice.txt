@@ -1,29 +1,28 @@
 【Xmark-Tools 公告】
-更新时间：2026-07-11
+更新时间：2026-08-02
 
-当前最新版本：v2.7.2
+当前最新版本：v2.7.3
 
-本次紧急修复（基于 v2.5 完整版恢复）：
-- 恢复「伪装白名单CPU型号」完整功能（cpu_spoof.sh / model_spoof.sh）
-  · 前台/后台游戏时全局替换 /proc/cpuinfo，全部退出自动还原
-  · 支持自定义要监控哪些游戏
-- 补齐字体：webroot/fonts/zhiyuan.ttf 找回，界面文字终于用回致远体
-- 恢复 v2.5 的完整 WebUI（自定义冻结 / 云更新入口 / 诊断按钮 / 捐赠码 等）
-- 恢复缺失脚本：exec_daemon.sh（后台守护）、ptyrun.sh、detect.sh、
-  diag.sh、env_audit.sh、hide.sh、extract_icons_v2.sh、cpu_spoof.sh、
-  model_spoof.sh
-- 恢复缺失二进制：bin/ksu_reload.sh、bin/rcq_xt.sh，修正 bin/yuki 大小写
-- 恢复捐赠图 / xny.jpg / gg.sh(云端公告拉取) / xz.sh(云更新触发)
+本次更新（v2.7.3）：
+- 修复监控脚本硬编码版本号：系统信息页的模块版本改为从 module.prop 实时读取
+  （此前固定显示 2.3，与实际版本不一致）
+- 优化伪装进程：监控进程改为从 stdin 执行，命令行不再暴露脚本路径；
+  同时写入 /proc/self/comm 伪装内核 comm，ps/top 不再直接显示 sh 与模块路径
+- 移除遗留的 21120 端口后台执行服务：该服务以 root 监听所有网卡且无鉴权，
+  当前 WebUI 已改由 exec_daemon 常驻守护接管，无调用方，直接删除消除风险
+- 修复常驻通知每 2 秒重复发送的问题（只在状态变化时发送）
+- 修复发布包携带陈旧 pid 状态文件的问题：pid/ 不再打包，安装时自动清空，
+  避免 yuki.pid/touch_daemon.pid 等旧文件误杀无关进程
+- 修复隐藏存储数据位置：隐藏目录迁到 /data/adb/xinmaskplus/storage_hidden，
+  模块更新/卸载不再丢数据；旧数据自动迁移，卸载时自动还原
+- 修复信号增强空壳 APK 问题：校验文件有效后才挂载，无效占位文件不会弄坏系统应用
+- 修复终端组件缺失体验：goterm/term_kill.sh 缺失时明确提示，不再无限超时
+- 发布流水线：修正不存在的 v2.6.0 回退标签为 v2.6，新增 pid/ 不打包校验
 
-保留 v2.7 / v2.7.1 的修复：
-- monitor_app.sh 补齐 force_hide / coloros_lock，rkp 改读 rkp_done
-- service.sh 的 PERSIST_FLAGS 扩宽，让 SOTER/常驻通知/自动清理等
-  开关跨重启保留
-- customize.sh 修好安装到最后 Error code: 1 的问题
-- 发布流水线（tag/dispatch → workflow 自动打包上传）
-
-⚠️ 提醒：
-- 首次进入 WebUI 会自动拉公告（gg.sh 走 ghfast/gh-proxy/直连三层）
-- 「云更新到最新版」入口在首页卡片，下次直接更新不用手动下载
+说明：
+- 终端组件（goterm/tmux 等二进制）从未进入过公开仓库，需自行放入模块
+  bin/ 目录后终端功能才可用
+- 伪装进程已通过 mksh 源码核验（exec 内建支持 -a 替换 argv[0]），
+  实际对抗效果建议在真机确认
 
 如有问题请联系作者。
