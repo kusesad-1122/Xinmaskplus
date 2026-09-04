@@ -1,3 +1,23 @@
+## Xmark-Tools v2.8.0
+
+### 本次更新
+
+- 游戏清理对齐：clean_game.sh 按源脚本补齐每游戏保留项与存储/user_de 清理；
+  修正 CF（仅留 shared_prefs 并改走存储）、重写无畏契约五段保留；
+  新增 PUBG 四服（国际/日韩/越南/台服）；清理页名单与监控名单同步新增 PUBG 四服
+- 检测环境页新增检测对抗卡：露娜/牛头驱动残留清理、春秋对抗包、Hunter 策略清理
+- 功能页新增：重置防火墙、恢复实时网络、SELinux 严格/宽容切换、
+  一键关闭 USB 调试、电量与充电伪装
+- 改标识优化：按包 SSAID 支持自定义输入（8-16 位字母数字，失败自动从备份恢复）
+
+### 说明
+
+- 新增脚本（driver_clean/chunqiu_fix/hunter_fix/firewall_reset/net_refresh/selinux_set/adb_off/battery_fake）均为一次性动作，无常驻开关
+- 露娜/春秋名单剔除了系统目录与正常应用数据，只删作弊/检测工具专属残留
+- 终端二进制（goterm/tmux）仍需自行放入 bin/ 目录
+
+---
+
 ## Xmark-Tools v2.7.3
 
 ### 本次更新
