@@ -932,6 +932,54 @@
                     <div class="process-window" id="cpuSpoofLog" style="max-height:120px;font-size:10px;line-height:1.6;">检查中...</div>
                 </div>
             </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header">
+                    <span class="func-switch-title">重置防火墙</span>
+                </div>
+                <div class="func-switch-desc">清空 iptables 全表并恢复全放行，解决脚本型端口/拦截导致的网络异常。</div>
+                <button class="btn" onclick="runFirewallReset()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#fa709a,#fee140);color:#fff;font-weight:700;border:none;border-radius:12px;">一键重置</button>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header">
+                    <span class="func-switch-title">恢复实时网络</span>
+                </div>
+                <div class="func-switch-desc">重置网络接口/缓存/统计/DNS 并重启网络服务，会短暂影响网络，不会掉驱动。</div>
+                <button class="btn" onclick="runNetRefresh()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;font-weight:700;border:none;border-radius:12px;">恢复网络</button>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header">
+                    <span class="func-switch-title">SELinux 切换</span>
+                    <span id="selinuxState" style="font-size:var(--fs-xs);color:var(--tx3);">状态未知</span>
+                </div>
+                <div class="func-switch-desc">即时生效，重启恢复。部分检测要求 Enforcing，改机操作常需 Permissive。</div>
+                <div style="display:flex;gap:8px;margin-top:10px;">
+                    <button class="btn" onclick="setSelinux('enforcing')" style="flex:1;padding:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:700;border:none;border-radius:12px;">设为严格</button>
+                    <button class="btn" onclick="setSelinux('permissive')" style="flex:1;padding:12px;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;font-weight:700;border:none;border-radius:12px;">设为宽容</button>
+                    <button class="btn" onclick="refreshSelinuxState()" style="padding:12px 14px;background:rgba(255,255,255,.14);color:var(--tx);font-weight:700;border:none;border-radius:12px;">刷新</button>
+                </div>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header">
+                    <span class="func-switch-title">一键关闭USB调试</span>
+                </div>
+                <div class="func-switch-desc">关闭 USB 调试与无线调试（USB调试开启是部分游戏闪框原因之一）。</div>
+                <button class="btn" onclick="runAdbOff()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff;font-weight:700;border:none;border-radius:12px;">关闭调试</button>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header">
+                    <span class="func-switch-title">电量与充电伪装</span>
+                </div>
+                <div class="func-switch-desc">伪装电量百分比与充电状态，即时生效；一键恢复。</div>
+                <div style="display:flex;gap:8px;margin-top:10px;align-items:center;">
+                    <input id="batteryLevel" type="number" min="1" max="100" placeholder="1-100" style="flex:1;padding:12px;border:none;border-radius:12px;background:rgba(255,255,255,.14);color:var(--tx);font-size:var(--fs-sm);">
+                    <button class="btn" onclick="batteryFakeLevel()" style="flex:1;padding:12px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:700;border:none;border-radius:12px;">伪装电量</button>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                    <button class="btn" onclick="batteryFakeCharge(1)" style="flex:1;padding:12px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;font-weight:700;border:none;border-radius:12px;">充电中</button>
+                    <button class="btn" onclick="batteryFakeCharge(0)" style="flex:1;padding:12px;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;font-weight:700;border:none;border-radius:12px;">未充电</button>
+                    <button class="btn" onclick="batteryReset()" style="flex:1;padding:12px;background:rgba(255,255,255,.14);color:var(--tx);font-weight:700;border:none;border-radius:12px;">恢复</button>
+                </div>
+            </div>
 </div>
 <div id="jailbreakEntry" class="card" style="display:none; margin-top:16px;">
 <div class="section-title">KSU越狱工具</div>
@@ -958,6 +1006,29 @@
                 <div style="color: var(--tx3); text-align: center; padding: 20px;">点击上方按钮开始环境检测</div>
             </div>
             <div id="audit-result" style="display:none;max-height:400px;overflow-y:auto;font-size:var(--fs-xs);line-height:1.5;white-space:pre-wrap;margin-top:8px;"></div>
+        </div>
+        <div class="card" style="margin-top:16px;">
+            <div class="section-title">检测对抗</div>
+            <div class="func-switch-item" style="border-top:none;padding-top:0;">
+                <div class="func-switch-header"><span class="func-switch-title">露娜相关</span></div>
+                <div class="func-switch-desc">清理QX/橘子驱动与外挂辅助残留（Bing/nh/jz/HPX 等），过 Luna 异常检测。</div>
+                <button class="btn" onclick="runLunaFix()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:700;border:none;border-radius:12px;">一键清理</button>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header"><span class="func-switch-title">牛头相关</span></div>
+                <div class="func-switch-desc">清理驱动与辅助残留，过牛头 32 位 Found Root/Hook 检测。</div>
+                <button class="btn" onclick="runNiutouFix()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#f093fb,#f5576c);color:#fff;font-weight:700;border:none;border-radius:12px;">一键清理</button>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header"><span class="func-switch-title">春秋相关</span></div>
+                <div class="func-switch-desc">清西米露残留/数据隔离属性/刷机属性，删检测工具与外挂残留、GG 痕迹。</div>
+                <button class="btn" onclick="runChunqiuFix()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#4facfe,#00f2fe);color:#fff;font-weight:700;border:none;border-radius:12px;">一键对抗</button>
+            </div>
+            <div class="func-switch-item">
+                <div class="func-switch-header"><span class="func-switch-title">Hunter 相关</span></div>
+                <div class="func-switch-desc">清除放宽的隐藏 API 策略（hidden_api_policy 等），防 Hunter 类检测。</div>
+                <button class="btn" onclick="runHunterFix()" style="margin-top:10px;width:100%;padding:14px;background:linear-gradient(135deg,#43e97b,#38f9d7);color:#fff;font-weight:700;border:none;border-radius:12px;">清除策略</button>
+            </div>
         </div>
     </div>
 
@@ -1992,10 +2063,67 @@ jailbreak:$('page-jailbreak')
         T(`sh /data/adb/modules/xinmaskplus/scripts/clean_game.sh ${pkg}`).then(()=>{ alert(`${name} 清理完成`); refreshLogFull(); });
     };
     window.changeSsaid = function(pkg, name){
+        const custom = prompt(`修改 ${name} 的 SSAID：\n留空=随机生成，或输入8-16位字母数字自定义`, '');
+        if(custom === null) return;
+        if(custom !== '' && !/^[a-zA-Z0-9]{8,16}$/.test(custom)){ alert('格式不对：8-16位字母数字，留空则随机'); return; }
         if(!confirm(`确定要修改 ${name} 的 SSAID 吗？\n\n这可能导致应用数据重置，请谨慎操作。`)) return;
-        T(`sh /data/adb/modules/xinmaskplus/scripts/change_ssaid.sh ${pkg}`).then(res=>{
+        T(`sh /data/adb/modules/xinmaskplus/scripts/change_ssaid.sh ${pkg} ${custom}`).then(res=>{
             if(res.stdout && res.stdout.trim() === 'OK') alert(`${name} SSAID 修改成功`); else alert(`${name} SSAID 修改失败`);
             refreshLogFull();
+        });
+    };
+
+    async function runFixScript(script, label, timeout = 90000){
+        if(!confirm(`确定执行「${label}」吗？`)) return;
+        const r = await T(`sh /data/adb/modules/xinmaskplus/scripts/${script}`, timeout);
+        alert(`${label} 执行完成\n${(r.stdout || '').trim()}`);
+        refreshLogFull();
+    }
+    window.runLunaFix = function(){ runFixScript('driver_clean.sh luna', '露娜残留清理'); };
+    window.runNiutouFix = function(){ runFixScript('driver_clean.sh niutou', '牛头残留清理'); };
+    window.runChunqiuFix = function(){ runFixScript('chunqiu_fix.sh', '春秋检测对抗'); };
+    window.runHunterFix = function(){ runFixScript('hunter_fix.sh', 'Hunter 策略清理'); };
+    window.runFirewallReset = function(){
+        if(!confirm('确定重置防火墙吗？\n将清空 iptables 全表并恢复全放行。')) return;
+        T('sh /data/adb/modules/xinmaskplus/scripts/firewall_reset.sh', 30000).then(r=>{
+            alert('防火墙已重置为默认状态\n' + (r.stdout || '').trim()); refreshLogFull();
+        });
+    };
+    window.runNetRefresh = function(){
+        if(!confirm('确定恢复实时网络吗？\n会短暂影响网络（重启网络服务），不会掉驱动。')) return;
+        T('sh /data/adb/modules/xinmaskplus/scripts/net_refresh.sh', 60000).then(r=>{
+            alert('网络配置已重置完成\n' + (r.stdout || '').trim()); refreshLogFull();
+        });
+    };
+    window.setSelinux = function(mode){
+        T(`sh /data/adb/modules/xinmaskplus/scripts/selinux_set.sh ${mode}`, 15000).then(()=>refreshSelinuxState());
+    };
+    window.refreshSelinuxState = async function(){
+        const r = await T('sh /data/adb/modules/xinmaskplus/scripts/selinux_set.sh status', 15000);
+        const m = (r.stdout || '').match(/STATE=(.*)/);
+        const el = document.getElementById('selinuxState');
+        if(el) el.textContent = '当前：' + (m ? m[1].trim() : '未知');
+    };
+    window.runAdbOff = function(){
+        T('sh /data/adb/modules/xinmaskplus/scripts/adb_off.sh', 15000).then(r=>{
+            alert('USB调试处理完成\n' + (r.stdout || '').trim()); refreshLogFull();
+        });
+    };
+    window.batteryFakeLevel = function(){
+        const v = ((document.getElementById('batteryLevel') || {}).value || '').trim();
+        if(!/^\d+$/.test(v) || +v < 1 || +v > 100){ alert('请输入1-100的整数'); return; }
+        T(`sh /data/adb/modules/xinmaskplus/scripts/battery_fake.sh level ${v}`, 15000).then(r=>{
+            alert('电量伪装：' + (r.stdout || '').trim()); refreshLogFull();
+        });
+    };
+    window.batteryFakeCharge = function(on){
+        T(`sh /data/adb/modules/xinmaskplus/scripts/battery_fake.sh ${on ? 'charging' : 'uncharging'}`, 15000).then(r=>{
+            alert('充电伪装：' + (r.stdout || '').trim()); refreshLogFull();
+        });
+    };
+    window.batteryReset = function(){
+        T('sh /data/adb/modules/xinmaskplus/scripts/battery_fake.sh reset', 15000).then(r=>{
+            alert('电量恢复：' + (r.stdout || '').trim()); refreshLogFull();
         });
     };
 
