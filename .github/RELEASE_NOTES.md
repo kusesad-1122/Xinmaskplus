@@ -12,7 +12,7 @@
 
 ### 说明
 
-- 新增脚本（driver_clean/chunqiu_fix/hunter_fix/firewall_reset/net_refresh/selinux_set/adb_off/battery_fake）均为一次性动作，无常驻开关
+- 本次新增功能均为一次性动作，无常驻开关
 - 露娜/春秋名单剔除了系统目录与正常应用数据，只删作弊/检测工具专属残留
 - 终端二进制（goterm/tmux）仍需自行放入 bin/ 目录
 
